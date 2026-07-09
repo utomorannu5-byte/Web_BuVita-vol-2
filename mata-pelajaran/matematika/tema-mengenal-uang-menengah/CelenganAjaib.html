@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matematika Menengah: Celengan Ajaib - BuVita EduPlay</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background-image: radial-gradient(#333333 15%, transparent 16%);
+        background-size: 16px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .game-container {
+        width: 100%;
+        max-width: 800px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .game-header {
+        background-color: #9b59b6;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 12px;
+        border: 3px solid black;
+        box-shadow: 5px 5px 0px black;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+        text-align: center;
+        width: 100%;
+        cursor: pointer;
+      }
+      .main-play-zone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #1e1e1e;
+        border: 3px solid black;
+        border-radius: 20px;
+        padding: 30px;
+        width: 100%;
+        box-shadow: 6px 6px 0px black;
+        margin-bottom: 25px;
+        position: relative;
+      }
+      .target-bubble {
+        background-color: #ffffff;
+        color: #000000;
+        border: 3px solid #000000;
+        border-radius: 15px;
+        padding: 12px 20px;
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        position: relative;
+        box-shadow: 4px 4px 0px #000000;
+        text-align: center;
+      }
+      .target-bubble::after {
+        content: "";
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 15px 15px 0;
+        border-style: solid;
+        border-color: #ffffff transparent;
+        display: block;
+        width: 0;
+      }
+      .target-bubble::before {
+        content: "";
+        position: absolute;
+        bottom: -19px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 16px 16px 0;
+        border-style: solid;
+        border-color: #000000 transparent;
+        display: block;
+        width: 0;
+        z-index: -1;
+      }
+      .celengan-character {
+        margin: 10px 0;
+        transition: transform 0.1s ease;
+        cursor: pointer;
+        user-select: none;
+        display: inline-block; /* ✨ Memastikan efek animasi transform bisa bekerja sempurna */
+        text-align: center;
+      }
+
+      /* Tambahkan ini di bawahnya (opsional, biar gambar babi pas di tengah) */
+      .celengan-character img {
+        display: block;
+        margin: 0 auto;
+      }
+      .celengan-shake {
+        animation: shake 0.3s ease-in-out;
+      }
+      .papan-skor-tabungan {
+        background-color: #151515;
+        border: 2px solid #333333;
+        border-radius: 10px;
+        padding: 10px 25px;
+        margin-top: 15px;
+        text-align: center;
+      }
+      .papan-skor-tabungan h2 {
+        font-family: "Fredoka One", sans-serif;
+        color: #2ecc71;
+        font-size: 1.8rem;
+      }
+      .mesin-koin-zone {
+        background-color: #1e1e1e;
+        border: 3px solid black;
+        border-radius: 16px;
+        padding: 20px;
+        width: 100%;
+        box-shadow: 6px 6px 0px black;
+        text-align: center;
+      }
+      .mesin-title {
+        font-family: "Fredoka One", sans-serif;
+        color: white;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+      }
+      .koin-options {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        min-height: 90px;
+        align-items: center;
+      }
+      .koin-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.1s;
+        width: 130px;
+        padding: 0;
+      }
+      .koin-btn:hover {
+        transform: scale(1.05);
+      }
+      .koin-btn img {
+        width: 100%;
+        border-radius: 8px;
+        border: 2px solid black;
+        box-shadow: 4px 4px 0px black;
+      }
+      .btn-reset-celengan {
+        background-color: #e74c3c;
+        color: white;
+        font-family: "Fredoka One", sans-serif;
+        padding: 8px 20px;
+        font-size: 1rem;
+        border: 2px solid black;
+        border-radius: 8px;
+        box-shadow: 3px 3px 0px black;
+        cursor: pointer;
+        margin-top: 15px;
+      }
+      .btn-reset-celengan:hover {
+        background-color: #c0392b;
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0) rotate(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-6px) rotate(-3deg);
+        }
+        40%,
+        80% {
+          transform: translateX(6px) rotate(3deg);
+        }
+      }
+
+      /* Styling Pop-up Sukses */
+      .popup-overlay-global {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .popup-content-box {
+        background-color: #1e1e1e;
+        border: 4px solid #2ecc71;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0px 0px 30px rgba(46, 204, 113, 0.3);
+        animation: zoomInPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .popup-icon-circle {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        animation: bouncePop 1s infinite;
+      }
+
+      .popup-title {
+        font-family: "Fredoka One", sans-serif;
+        color: #2ecc71;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      .popup-text {
+        font-family: "Nunito", sans-serif;
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        line-height: 1.4;
+      }
+
+      .popup-btn-next {
+        background-color: #f1b811;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 30px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 15px;
+        box-shadow: 5px 5px 0px black;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .popup-btn-next:hover {
+        transform: scale(1.05);
+        background-color: #ffc107;
+      }
+
+      @keyframes zoomInPop {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes bouncePop {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      @keyframes shakePop {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-10px);
+        }
+        40%,
+        80% {
+          transform: translateX(10px);
+        }
+      }
+
+      .navigasi-level-box {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 900px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        gap: 20px;
+      }
+
+      .btn-nav-level {
+        flex: 1;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.1rem;
+        padding: 15px 20px;
+        border: 3px solid black;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 4px 4px 0px black;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+        color: white;
+      }
+
+      .btn-nav-level:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0px black;
+      }
+
+      .btn-nav-level.btn-back {
+        background-color: #95a5a6;
+        color: black;
+      }
+      .btn-nav-level.btn-back:hover {
+        background-color: #bdc3c7;
+      }
+
+      .btn-nav-level.btn-next {
+        background-color: #9b59b6;
+      }
+      .btn-nav-level.btn-next:hover {
+        background-color: #8e44ad;
+      }
+
+      @media (max-width: 480px) {
+        .navigasi-level-box {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+    </header>
+
+    <div class="game-container">
+      <div class="game-header" onclick="putarSuaraMisi()">Ayo Menabung! 🔊</div>
+
+      <div class="main-play-zone">
+        <div class="target-bubble" id="teksMisiBubble">Loading misi...</div>
+
+        <div class="celengan-character" id="karakterCelengan" onclick="putarSuaraMisi()">
+          <img src="../../../assets/tabungan.png" alt="Celengan Babi" style="width: 220px; height: auto" />
+        </div>
+
+        <div class="papan-skor-tabungan">
+          <p style="color: #aaa; font-size: 0.9rem; font-weight: 700">Uang Di Dalam Celengan:</p>
+          <h2 id="totalTabunganTeks">Rp 0</h2>
+        </div>
+
+        <button class="btn-reset-celengan" onclick="kosongkanCelengan()">🔄 Kosongkan Uang</button>
+      </div>
+
+      <div class="mesin-koin-zone">
+        <h3 class="mesin-title">👇 Klik Uang Pilihanmu untuk Dimasukkan:</h3>
+        <div class="koin-options" id="wadahPilihanUang"></div>
+      </div>
+
+      <div id="welcomePopup" class="popup-overlay-global" style="display: flex">
+        <div class="popup-content-box" style="border-color: #9b59b6; box-shadow: 0px 0px 30px rgba(155, 89, 182, 0.3)">
+          <div class="popup-icon-circle" style="font-size: 4rem; margin-bottom: 10px">🐷</div>
+          <h2 class="popup-title" style="color: #9b59b6; font-size: 1.8rem; margin-bottom: 15px">Dengarkan Petunjuk Yuk!</h2>
+          <p class="popup-text" style="margin-bottom: 20px">Halo! Yuk bantu BuVita menabung uang ke dalam celengan ajaib sampai jumlahnya pas! Klik tombol di bawah untuk dengar petunjuk ya! ✨</p>
+
+          <button class="popup-btn-next" style="background-color: #9b59b6; color: white; margin-bottom: 15px; width: 100%; display: block" onclick="dengarPetunjukAwal()">🔊 DENGAR PETUNJUK GAME</button>
+
+          <button class="popup-btn-next" style="background-color: #2ecc71; color: white; width: 100%; display: block; border-color: #27ae60" onclick="klikMulaiGame()">🎮 LANGSUNG BERMAIN ➡️</button>
+        </div>
+      </div>
+
+      <div id="successPopup" class="popup-overlay-global">
+        <div class="popup-content-box">
+          <div class="popup-icon-circle">🌟</div>
+          <h2 class="popup-title">HEBAT!</h2>
+          <p id="popupMessageBenar" class="popup-text"></p>
+          <button class="popup-btn-next" onclick="tutupDanLanjutSoal()">SOAL BERIKUTNYA ✨</button>
+        </div>
+      </div>
+
+      <div class="navigasi-level-box">
+        <button class="btn-nav-level btn-back" onclick="navigasiKembali()">⬅️ GAME SEBELUMNYA</button>
+        <button class="btn-nav-level btn-next" onclick="navigasiLanjut()">GAME BERIKUTNYA ➡️</button>
+      </div>
+
+      <div id="failedPopup" class="popup-overlay-global">
+        <div class="popup-content-box" style="border-color: #e74c3c; box-shadow: 0px 0px 30px rgba(231, 76, 60, 0.3)">
+          <div class="popup-icon-circle" style="animation: shakePop 0.5s ease-in-out">⚠️</div>
+          <h2 class="popup-title" style="color: #e74c3c">Kekenyangan!</h2>
+          <p id="popupMessageSalah" class="popup-text"></p>
+          <button class="popup-btn-next" onclick="tutupDanUlangiSoal()">Coba Lagi</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const masterUang = {
+        1000: "../assets/uang1000.png",
+        2000: "../assets/uang2000.png",
+        5000: "../assets/uang5000.png",
+        10000: "../assets/uang10000.png",
+      };
+
+      const daftarTargetSoal = [
+        { target: 3000, pecahanPilihan: [1000, 2000] },
+        { target: 4000, pecahanPilihan: [1000, 2000] },
+        { target: 5000, pecahanPilihan: [1000, 2000, 5000] },
+        { target: 6000, pecahanPilihan: [1000, 2000, 5000] },
+        { target: 7000, pecahanPilihan: [1000, 2000, 5000] },
+        { target: 8000, pecahanPilihan: [1000, 2000, 5000] },
+        { target: 10000, pecahanPilihan: [2000, 5000, 10000] },
+        { target: 12000, pecahanPilihan: [1000, 2000, 5000, 10000] },
+        { target: 15000, pecahanPilihan: [2000, 5000, 10000] },
+      ];
+
+      let targetUangSekarang = 0;
+      let isiCelenganSekarang = 0;
+      let lockValidasi = false;
+
+      // 🔥 LOGIKA FIX: Audio instruksi umum dipisah dan di-lock status bukanya
+      let audioInstruksiAwal = new Audio("../audio/judulMenabung.mp3");
+      let gameBaruBuka = true;
+
+      function acakMisiBaru() {
+        lockValidasi = false;
+        isiCelenganSekarang = 0;
+        document.getElementById("totalTabunganTeks").innerText = "Rp 0";
+
+        const indeksSoal = Math.floor(Math.random() * daftarTargetSoal.length);
+        const soalTerpilih = daftarTargetSoal[indeksSoal];
+        targetUangSekarang = soalTerpilih.target;
+
+        document.getElementById("teksMisiBubble").innerHTML = `Tolong isi aku sampai tepat <strong>Rp ${targetUangSekarang.toLocaleString("id-ID")}</strong> ya!`;
+
+        const wadahTombol = document.getElementById("wadahPilihanUang");
+        wadahTombol.innerHTML = "";
+
+        soalTerpilih.pecahanPilihan.forEach((nominal) => {
+          const button = document.createElement("button");
+          button.className = "koin-btn";
+          button.onclick = () => masukkanUang(nominal);
+          button.innerHTML = `<img src="${masterUang[nominal]}" alt="Uang ${nominal}">`;
+          wadahTombol.appendChild(button);
+        });
+
+        // 🔥 LOGIKA FIX: Cegah pemanggilan otomatis suara misi soal jika pop-up instruksi masih aktif dibuka pertama kali
+        if (!gameBaruBuka) {
+          putarSuaraMisi();
+        }
+      }
+
+      // 🔥 LOGIKA FIX: Mainkan instruksi permainan jika tombol panduan suara diklik anak
+      function dengarPetunjukAwal() {
+        audioInstruksiAwal
+          .play()
+          .then(() => {
+            audioInstruksiAwal.onended = () => {
+              klikMulaiGame();
+            };
+          })
+          .catch((e) => console.log("Menunggu interaksi klik aktif dari pengguna."));
+      }
+
+      // 🔥 LOGIKA FIX: Hentikan paksa instruksi awal sebelum memulai suara soal nominal baru
+      function klikMulaiGame() {
+        document.getElementById("welcomePopup").style.display = "none";
+
+        audioInstruksiAwal.pause();
+        audioInstruksiAwal.currentTime = 0; // Kembalikan durasi audio ke awal
+
+        gameBaruBuka = false;
+        putarSuaraMisi(); // Sekarang suara misi soal pertama bisa berputar tanpa tertimpa
+      }
+
+      function putarSuaraMisi() {
+        if (targetUangSekarang > 0) {
+          let audioMisi = new Audio("../audio/ayomenabung.mp3");
+          audioMisi.play().catch((e) => console.log("Audio misi belum di-upload"));
+        }
+      }
+
+      function masukkanUang(nominal) {
+        if (lockValidasi) return;
+        isiCelenganSekarang += nominal;
+        document.getElementById("totalTabunganTeks").innerText = "Rp " + isiCelenganSekarang.toLocaleString("id-ID");
+
+        const celengan = document.getElementById("karakterCelengan");
+        celengan.classList.remove("celengan-shake");
+        void celengan.offsetWidth;
+        celengan.classList.add("celengan-shake");
+
+        let audioCring = new Audio("../audio/bayar.mp3");
+        audioCring.play().catch((e) => {});
+
+        setTimeout(cekKondisiTabungan, 600);
+      }
+
+      function kosongkanCelengan() {
+        isiCelenganSekarang = 0;
+        document.getElementById("totalTabunganTeks").innerText = "Rp 0";
+        let audioCancel = new Audio("../audio/cling.mp3");
+        audioCancel.play().catch((e) => {});
+      }
+
+      function cekKondisiTabungan() {
+        if (lockValidasi) return;
+        if (isiCelenganSekarang === targetUangSekarang) {
+          lockValidasi = true;
+          let audioBenar = new Audio("../audio/menang2.mp3");
+          audioBenar.play().catch((e) => {});
+          tampilkanPopUpBerhasil("🎉 Tabungan kamu PAS sekali! Celengan ajaib kenyang dan senang! 🌟");
+        } else if (isiCelenganSekarang > targetUangSekarang) {
+          lockValidasi = true;
+          let audioSalah = new Audio("../audio/salah2.mp3");
+          audioSalah.play().catch((e) => {});
+          tampilkanPopUpGagal(" Oh tidak, uangnya kelebihan! Celengannya kekenyangan. Ayo kosongkan dan coba susun lagi ya!");
+          kosongkanCelengan();
+          lockValidasi = false;
+        }
+      }
+
+      function tampilkanPopUpBerhasil(pesan) {
+        document.getElementById("popupMessageBenar").innerHTML = pesan;
+        document.getElementById("successPopup").style.display = "flex";
+      }
+
+      function tampilkanPopUpGagal(pesan) {
+        document.getElementById("popupMessageSalah").innerHTML = pesan;
+        document.getElementById("failedPopup").style.display = "flex";
+      }
+
+      function tutupDanLanjutSoal() {
+        document.getElementById("successPopup").style.display = "none";
+        acakMisiBaru();
+      }
+
+      function tutupDanUlangiSoal() {
+        document.getElementById("failedPopup").style.display = "none";
+      }
+
+      // Bersihkan fungsi DOMContentLoaded agar inisialisasi awal berjalan tertib
+      document.addEventListener("DOMContentLoaded", () => {
+        acakMisiBaru();
+      });
+
+      const urutanGameMenengah = ["KiosJajanan.html", "CelenganAjaib.html", "TebakDompet.html", "MesinKasir.html", "PestaPizza.html"];
+
+      function dapatkanIndexGameSekarang() {
+        const path = window.location.pathname;
+        const namaFile = path.substring(path.lastIndexOf("/") + 1);
+        return urutanGameMenengah.indexOf(namaFile);
+      }
+
+      function navigasiLanjut() {
+        const currentIndex = dapatkanIndexGameSekarang();
+        if (currentIndex !== -1 && currentIndex < urutanGameMenengah.length - 1) {
+          window.location.href = urutanGameMenengah[currentIndex + 1];
+        } else {
+          alert("🎉 Hebat! Kamu sudah menyelesaikan semua game di Level Menengah! Yuk kembali ke halaman utama.");
+          window.location.href = "../../../games.html";
+        }
+      }
+
+      function navigasiKembali() {
+        const currentIndex = dapatkanIndexGameSekarang();
+        if (currentIndex > 0) {
+          window.location.href = urutanGameMenengah[currentIndex - 1];
+        } else {
+          window.location.href = "../../../games.html";
+        }
+      }
+    </script>
+  </body>
+</html>

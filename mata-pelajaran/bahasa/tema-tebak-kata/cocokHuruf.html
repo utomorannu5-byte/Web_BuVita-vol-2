@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>BuVita EduPlay: Cocok Bayangan Huruf</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #121214;
+        background-image: radial-gradient(#252529 15%, transparent 16%);
+        background-size: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .game-container {
+        width: 100%;
+        max-width: 900px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .game-header {
+        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 20px;
+        border: 4px solid black;
+        box-shadow: 6px 6px 0px black;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+        text-align: center;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      /* Papan Utama Permainan */
+      .papan-main-shadow {
+        background-color: #1c1b22;
+        border: 4px solid black;
+        border-radius: 24px;
+        padding: 30px 20px;
+        width: 100%;
+        box-shadow: 6px 6px 0px black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+
+      /* Box Target Bayangan Huruf (Atas) */
+      .box-target-shadow {
+        background-color: #2c2a38;
+        border: 4px solid #7f8c8d;
+        border-radius: 20px;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 35px;
+        box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.6);
+        width: 85%;
+        max-width: 280px;
+        height: 160px;
+      }
+
+      /* Trik CSS Efek Bayangan / Siluet Huruf Pekat */
+      .teks-huruf-shadow {
+        font-family: "Fredoka One", sans-serif;
+        font-size: 7.5rem;
+        color: #0b0a0d; /* Sangat gelap seperti bayangan asli */
+        text-shadow: 0px 0px 4px rgba(255, 255, 255, 0.1);
+        user-select: none;
+      }
+
+      .instruksi-label {
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        color: #aaa;
+        margin-bottom: 25px;
+        text-align: center;
+        font-size: 1.2rem;
+      }
+
+      /* Wadah Pilihan Huruf Terang (Bawah) */
+      .wadah-pilihan-huruf {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+        padding-top: 25px;
+        border-top: 3px dashed #333;
+      }
+
+      .btn-kartu-huruf {
+        width: 110px;
+        height: 110px;
+        background-color: #2c2a38;
+        border: 4px solid black;
+        border-radius: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 4.5rem;
+        color: #f1c40f;
+        cursor: pointer;
+        box-shadow: 0px 6px 0px black;
+        transition: 0.1s;
+      }
+      .btn-kartu-huruf:active {
+        transform: translateY(4px);
+        box-shadow: 0px 2px 0px black;
+      }
+
+      /* Popup Sukses */
+      .popup-overlay-global {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+      .popup-content-box {
+        background-color: #1c1b22;
+        border: 4px solid #2ecc71;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+      }
+      .popup-btn-next {
+        background-color: #f1b811;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 30px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+    </header>
+
+    <div class="game-container">
+      <div class="game-header" id="btnSuara" onclick="putarSuaraMisi()">👥 Game Tebak Bayangan Huruf 🔊</div>
+
+      <div class="papan-main-shadow">
+        <div class="box-target-shadow">
+          <div class="teks-huruf-shadow" id="hurufMisteriShadow">A</div>
+        </div>
+
+        <div class="instruksi-label">👤 Cari huruf di bawah yang pas dengan bayangan di atas! 👤</div>
+
+        <div class="wadah-pilihan-huruf" id="zonaTombolHuruf"></div>
+      </div>
+
+      <div class="navigasi-level-box">
+        <button class="btn-nav-level btn-back" onclick="window.location.href = '../../../games.html'">⬅️ KELUAR</button>
+        <button class="btn-nav-level btn-next" onclick="muatSoalBayanganHuruf()">ACAK BARU 🔄</button>
+      </div>
+
+      <div id="successPopup" class="popup-overlay-global">
+        <div class="popup-content-box">
+          <div style="font-size: 5.5rem; margin-bottom: 15px">👍✨</div>
+          <h2 style="font-family: &quot;Fredoka One&quot;; color: #2ecc71; font-size: 2.3rem; margin-bottom: 10px">PAS SEKALI!</h2>
+          <p style="font-family: &quot;Nunito&quot;; color: white; font-size: 1.3rem; margin-bottom: 25px">Hebat! Bentuk hurufnya sama persis dengan bayangan!</p>
+          <button class="popup-btn-next" onclick="tutupDanLanjutSoal()">HURUF BERIKUTNYA ➡️</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Kumpulan Vokal dan Konsonan Dasar berukuran tebal untuk SLB
+      const databaseBayanganHuruf = [
+        { kunci: "A", opsi: ["A", "O", "I"], audio: "../../../audio/huruf_a.mp3" },
+        { kunci: "B", opsi: ["B", "D", "P"], audio: "../../../audio/huruf_b.mp3" }, // Melatih diskriminasi visual bentuk mirip
+        { kunci: "M", opsi: ["W", "M", "N"], audio: "../../../audio/huruf_m.mp3" }, // Melatih orientasi atas-bawah
+        { kunci: "O", opsi: ["C", "U", "O"], audio: "../../../audio/huruf_o.mp3" },
+        { kunci: "U", opsi: ["N", "U", "V"], audio: "../../../audio/huruf_u.mp3" },
+        { kunci: "E", opsi: ["F", "L", "E"], audio: "../../../audio/huruf_e.mp3" },
+      ];
+
+      let indeksSoal = 0;
+      let soalKini = null;
+
+      function muatSoalBayanganHuruf() {
+        // Pilih acak dari database
+        const acak = Math.floor(Math.random() * databaseBayanganHuruf.length);
+        soalKini = databaseBayanganHuruf[acak];
+
+        // Tampilkan bentuk bayangan gelap di atas
+        document.getElementById("hurufMisteriShadow").innerText = soalKini.kunci;
+
+        // Render Tombol Pilihan Huruf Terang di Bawah
+        const zonaPilihan = document.getElementById("zonaTombolHuruf");
+        zonaPilihan.innerHTML = "";
+
+        // Acak urutan tampil tombol pilihan
+        let opsiAcak = [...soalKini.opsi].sort(() => Math.random() - 0.5);
+
+        opsiAcak.forEach((hurufItem) => {
+          const kartu = document.createElement("div");
+          kartu.className = "btn-kartu-huruf";
+          kartu.innerText = hurufItem;
+
+          // Variasi warna acak yang cerah agar menarik
+          const warnaTeks = ["#f1c40f", "#2ecc71", "#3498db", "#e74c3c"];
+          kartu.style.color = warnaTeks[Math.floor(Math.random() * warnaTeks.length)];
+
+          kartu.onclick = () => verifikasiBayanganHuruf(hurufItem);
+          zonaPilihan.appendChild(kartu);
+        });
+
+        putarSuaraMisi();
+      }
+
+      function verifikasiBayanganHuruf(hurufTerpilih) {
+        if (hurufTerpilih === soalKini.kunci) {
+          new Audio("../../../audio/benar.mp3").play().catch(() => {});
+
+          setTimeout(() => {
+            new Audio("../../../audio/menang.mp3").play().catch(() => {});
+            document.getElementById("successPopup").style.display = "flex";
+          }, 200);
+        } else {
+          new Audio("../../../audio/salah.mp3").play().catch(() => {});
+          alert("❌ Hmmm, bentuk lekukannya belum pas dengan bayangan. Yuk coba tempel huruf yang lain!");
+        }
+      }
+
+      function putarSuaraMisi() {
+        if (soalKini && soalKini.audio) {
+          new Audio(soalKini.audio).play().catch(() => {});
+        }
+      }
+
+      function tutupDanLanjutSoal() {
+        document.getElementById("successPopup").style.display = "none";
+        muatSoalBayanganHuruf();
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        muatSoalBayanganHuruf();
+      });
+    </script>
+  </body>
+</html>

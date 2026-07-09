@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matematika Lanjutan: Celengan Impian - BuVita EduPlay</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #121214;
+        background-image: radial-gradient(#252529 15%, transparent 16%);
+        background-size: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        user-select: none;
+        font-family: "Nunito", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .game-container {
+        width: 100%;
+        max-width: 1000px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Header Melengkung Modern Retro */
+      .kios-header {
+        background: linear-gradient(135deg, #e67e22, #d35400);
+        color: white;
+        padding: 18px 40px;
+        border-radius: 50px;
+        border: 4px solid black;
+        box-shadow: 0px 8px 0px black;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 2rem;
+        margin-bottom: 30px;
+        text-align: center;
+        letter-spacing: 1px;
+        cursor: pointer;
+      }
+
+      /* LAYOUT 3 KOLOM BARU (FRESH!) */
+      .layout-arcade-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr 1fr;
+        gap: 20px;
+        width: 100%;
+        margin-bottom: 25px;
+      }
+      @media (max-width: 900px) {
+        .layout-arcade-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Panel-Panel Bergaya Mesin Game */
+      .arcade-card {
+        background-color: #1f1f26;
+        border: 4px solid black;
+        border-radius: 24px;
+        padding: 20px;
+        box-shadow: 6px 6px 0px black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Efek glow khusus level lanjutan */
+      .card-mainan {
+        border-color: #e67e22;
+        box-shadow: 6px 6px 0px #e67e22;
+      }
+      .card-celengan {
+        border-color: #f1c40f;
+        background-color: #1a1a24;
+        box-shadow: 0px 0px 20px rgba(241, 196, 15, 0.2);
+      }
+      .card-struk {
+        border-color: #3498db;
+        box-shadow: 6px 6px 0px #3498db;
+      }
+
+      .card-badge {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 4px 15px;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 0.8rem;
+        border-bottom-right-radius: 12px;
+        color: black;
+      }
+
+      /* Desain Konten Kolom 1 */
+      .item-emoji-huge {
+        font-size: 6rem;
+        margin: 15px 0;
+        filter: drop-shadow(0px 10px 0px rgba(0, 0, 0, 0.5));
+        animation: floatAjaib 2.5s ease-in-out infinite;
+      }
+      .tag-harga-retro {
+        background-color: #24242e;
+        border: 3px solid #e67e22;
+        color: #e67e22;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.3rem;
+        padding: 8px 20px;
+        border-radius: 30px;
+        font-weight: bold;
+      }
+
+      /* Desain Konten Kolom 2 (Celengan Tengah) */
+      .celengan-slot {
+        background-color: #0f0f14;
+        border: 3px dashed #f1c40f;
+        border-radius: 20px;
+        width: 100%;
+        min-height: 140px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+        margin-top: 10px;
+      }
+      .piggy-icon {
+        font-size: 4rem;
+        margin-bottom: 5px;
+      }
+
+      /* Desain Konten Kolom 3 */
+      .struk-papan-hitung {
+        width: 100%;
+        background-color: #fff;
+        color: #111;
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        margin: 15px 0;
+      }
+      .struk-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+      }
+
+      /* Section Lemari Uang Bawah */
+      .laci-section {
+        background-color: #1f1f26;
+        border: 4px solid black;
+        border-radius: 24px;
+        padding: 25px;
+        width: 100%;
+        box-shadow: 8px 8px 0px black;
+        text-align: center;
+      }
+      .laci-title {
+        font-family: "Fredoka One", sans-serif;
+        color: #ffffff;
+        margin-bottom: 20px;
+        font-size: 1.3rem;
+        text-transform: uppercase;
+      }
+      .laci-row {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        flex-wrap: wrap;
+      }
+      .uang-tombol {
+        width: 135px;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .uang-tombol:hover {
+        transform: translateY(-5px) scale(1.05);
+      }
+      .uang-tombol img {
+        width: 100%;
+        border-radius: 8px;
+        border: 3px solid black;
+        box-shadow: 4px 4px 0px black;
+      }
+
+      /* Uang Mini yang masuk celengan */
+      .uang-mini {
+        width: 85px;
+        animation: koinMasuk 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+      }
+      .uang-mini img {
+        width: 100%;
+        border: 2px solid black;
+        border-radius: 4px;
+      }
+
+      /* Tombol Utama */
+      .btn-setor-celengan {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+        color: white;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 40px;
+        font-size: 1.4rem;
+        border: 3px solid black;
+        border-radius: 50px;
+        box-shadow: 0px 6px 0px black;
+        cursor: pointer;
+        margin-top: 20px;
+        display: none;
+        transition: 0.1s;
+      }
+      .btn-setor-celengan:active {
+        transform: translateY(4px);
+        box-shadow: 0px 2px 0px black;
+      }
+
+      /* Animasi Baru */
+      @keyframes floatAjaib {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-12px) rotate(3deg);
+        }
+      }
+      @keyframes koinMasuk {
+        0% {
+          transform: translateY(-50px) scale(0.5);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Pop-up Global */
+      .popup-overlay-global {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+      .popup-content-box {
+        background-color: #1c1b22;
+        border: 4px solid #2ecc71;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0px 0px 30px rgba(46, 204, 113, 0.3);
+      }
+      .popup-icon-circle {
+        font-size: 5rem;
+        margin-bottom: 20px;
+      }
+      .popup-title {
+        font-family: "Fredoka One", sans-serif;
+        color: #2ecc71;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+      .popup-text {
+        font-family: "Nunito", sans-serif;
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        line-height: 1.4;
+      }
+      .popup-btn-next {
+        background-color: #f1b811;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 30px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 15px;
+        box-shadow: 5px 5px 0px black;
+        cursor: pointer;
+      }
+
+      /* Styling Tombol Navigasi Bawah */
+      .navigasi-level-box {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 900px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        gap: 20px;
+      }
+
+      .btn-nav-level {
+        flex: 1;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.1rem;
+        padding: 15px 20px;
+        border: 3px solid black;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 4px 4px 0px black;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+        color: white;
+      }
+
+      .btn-nav-level:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0px black;
+      }
+
+      /* Warna Tombol Back (Merah Tua/Retro) */
+      .btn-nav-level.btn-back {
+        background-color: #95a5a6;
+        color: black;
+      }
+      .btn-nav-level.btn-back:hover {
+        background-color: #bdc3c7;
+      }
+
+      /* Warna Tombol Next (Biru/Ungu Retro) */
+      .btn-nav-level.btn-next {
+        background-color: #9b59b6;
+      }
+      .btn-nav-level.btn-next:hover {
+        background-color: #8e44ad;
+      }
+
+      @media (max-width: 480px) {
+        .navigasi-level-box {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+    </header>
+
+    <div class="game-container">
+      <div class="kios-header" id="instruksiSuaraBtn" onclick="putarSuaraSoal()">🐷 Kembalian Celengan Impian 🔊</div>
+
+      <div class="layout-arcade-grid">
+        <div class="arcade-card card-mainan">
+          <div class="card-badge" style="background-color: #e67e22">IMPIANMU</div>
+          <div class="item-emoji-huge" id="jajananEmoji">🤖</div>
+          <h3 style="font-family: &quot;Fredoka One&quot;; color: white; margin-bottom: 10px" id="jajananNama">Loading...</h3>
+          <div class="tag-harga-retro" id="jajananHargaText">Rp 0</div>
+        </div>
+
+        <div class="arcade-card card-celengan">
+          <div class="card-badge" style="background-color: #f1c40f; color: black">CELENGAN TABUNGAN</div>
+          <div class="piggy-icon">🐷</div>
+          <p style="font-size: 0.85rem; color: #f1c40f; font-family: &quot;Nunito&quot;; margin-bottom: 5px">Klik uang di dalam jika ingin membatalkan:</p>
+          <div class="celengan-slot" id="wadahUangMeja"></div>
+        </div>
+
+        <div class="arcade-card card-struk">
+          <div class="card-badge" style="background-color: #3498db">NOTALITAS</div>
+
+          <div class="struk-papan-hitung">
+            <div class="struk-line" style="color: #555"><span>Kertas Transaksi</span><span>#BUVITA</span></div>
+            <div style="border-top: 2px dashed #999; margin: 5px 0"></div>
+            <div class="struk-line"><span>Kamu Bayar:</span><span id="textStrukBayar">Rp 0</span></div>
+            <div class="struk-line" style="color: #e74c3c"><span>Harga Barang:</span><span id="textStrukHarga">- Rp 0</span></div>
+            <div style="border-top: 2px dashed #999; margin: 5px 0"></div>
+            <div class="struk-line" style="font-weight: 900; font-size: 1.05rem"><span>Sisa Kembalian:</span><span id="totalPapanTeks" style="color: #27ae60">Rp 0</span></div>
+          </div>
+
+          <div id="wadahUangBayar" style="width: 100%; text-align: center"></div>
+        </div>
+      </div>
+
+      <div class="laci-section">
+        <h3 class="laci-title">🗄️ Masukkan Pecahan Uang Kembalian Ke Dalam Celengan:</h3>
+        <div class="laci-row" id="wadahDompetUang"></div>
+
+        <button class="btn-setor-celengan" id="btnBayarSekarang" onclick="validasiKembalian()">🐷 MASUKKAN KE CELENGAN</button>
+      </div>
+
+      <div class="navigasi-level-box">
+        <button class="btn-nav-level btn-back" onclick="navigasiKembali()">⬅️ GAME SEBELUMNYA</button>
+        <button class="btn-nav-level btn-next" onclick="navigasiLanjut()">GAME BERIKUTNYA ➡️</button>
+      </div>
+
+      <div id="successPopup" class="popup-overlay-global">
+        <div class="popup-content-box">
+          <div class="popup-icon-circle">🌟</div>
+          <h2 class="popup-title">HEBAT!</h2>
+          <p id="popupMessageBenar" class="popup-text"></p>
+          <button class="popup-btn-next" onclick="tutupDanLanjutSoal()">SOAL BERIKUTNYA ✨</button>
+        </div>
+      </div>
+
+      <div id="failedPopup" class="popup-overlay-global">
+        <div class="popup-content-box" style="border-color: #e74c3c; box-shadow: 0px 0px 30px rgba(231, 76, 60, 0.3)">
+          <div class="popup-icon-circle" style="animation: shakePop 0.5s ease-in-out">❌</div>
+          <h2 class="popup-title" style="color: #e74c3c">BELUM PAS</h2>
+          <p id="popupMessageSalah" class="popup-text"></p>
+          <button class="popup-btn-next" onclick="tutupDanUlangiSoal()">Coba Lagi</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const masterGambarUang = {
+        1000: "../assets/uang1000.png",
+        2000: "../assets/uang2000.png",
+        5000: "../assets/uang5000.png",
+        10000: "../assets/uang10000.png",
+        20000: "../assets/uang20000.png",
+      };
+
+      const daftarSoalCelengan = [
+        { nama: "Robot Mainan", harga: 15000, emoji: "🤖", uangBayar: 20000, kembalianBenar: 5000, audio: "../audio/celengan_robot.mp3" },
+        { nama: "Boneka Beruang", harga: 12000, emoji: "🧸", uangBayar: 20000, kembalianBenar: 8000, audio: "../audio/celengan_boneka.mp3" },
+        { nama: "Mobil Remot", harga: 18000, emoji: "🚗", uangBayar: 20000, kembalianBenar: 2000, audio: "../audio/celengan_mobil.mp3" },
+        { nama: "Tas Sekolah Baru", harga: 10000, emoji: "🎒", uangBayar: 20000, kembalianBenar: 10000, audio: "../audio/celengan_tas.mp3" },
+        { nama: "Kotak Bekal", harga: 8000, emoji: "🍱", uangBayar: 10000, kembalianBenar: 2000, audio: "../audio/celengan_bekal.mp3" },
+      ];
+
+      let soalSekarang = null;
+      let totalUangDiMeja = 0;
+      let arrayUangDiMeja = [];
+
+      function mulaiGameCelengan() {
+        const acak = Math.floor(Math.random() * daftarSoalCelengan.length);
+        soalSekarang = daftarSoalCelengan[acak];
+
+        document.getElementById("jajananEmoji").innerText = soalSekarang.emoji;
+        document.getElementById("jajananNama").innerText = soalSekarang.nama;
+        document.getElementById("jajananHargaText").innerText = "Rp " + soalSekarang.harga.toLocaleString("id-ID");
+
+        // Isi data struk kertas belanjaan
+        document.getElementById("textStrukBayar").innerText = "Rp " + soalSekarang.uangBayar.toLocaleString("id-ID");
+        document.getElementById("textStrukHarga").innerText = "- Rp " + soalSekarang.harga.toLocaleString("id-ID");
+
+        // Render Gambar Dompet Pembayar di kolom struk
+        document.getElementById("wadahUangBayar").innerHTML = `
+          <img src="${masterGambarUang[soalSekarang.uangBayar]}" style="width:110px; border:2px solid black; border-radius:6px; box-shadow:2px 2px 0px black; margin-top:5px;">
+        `;
+
+        // Render Pilihan Uang di Lemari Kasir Bawah
+        const wadahDompet = document.getElementById("wadahDompetUang");
+        wadahDompet.innerHTML = "";
+        const pecahanPilihan = [1000, 2000, 5000, 10000];
+
+        pecahanPilihan.forEach((nominal) => {
+          const itemUang = document.createElement("div");
+          itemUang.className = "uang-tombol";
+          itemUang.onclick = () => tambahUangLewatKlik(nominal);
+          itemUang.innerHTML = `<img src="${masterGambarUang[nominal]}" alt="Uang ${nominal}">`;
+          wadahDompet.appendChild(itemUang);
+        });
+
+        totalUangDiMeja = 0;
+        arrayUangDiMeja = [];
+        updateUIMejaKasir();
+        document.getElementById("btnBayarSekarang").style.display = "none";
+
+        putarSuaraSoal();
+      }
+
+      function putarSuaraSoal() {
+        if (soalSekarang && soalSekarang.audio) {
+          let audio = new Audio(soalSekarang.audio);
+          audio.play().catch((e) => console.log("Audio belum di-upload"));
+        }
+      }
+
+      function tambahUangLewatKlik(nominal) {
+        arrayUangDiMeja.push(nominal);
+        let audioClick = new Audio("../../../audio/benar.mp3");
+        audioClick.play().catch((e) => {});
+        hitungTotalMeja();
+      }
+
+      function hitungTotalMeja() {
+        totalUangDiMeja = arrayUangDiMeja.reduce((a, b) => a + b, 0);
+        updateUIMejaKasir();
+
+        if (totalUangDiMeja > 0) {
+          document.getElementById("btnBayarSekarang").style.display = "inline-block";
+        } else {
+          document.getElementById("btnBayarSekarang").style.display = "none";
+        }
+      }
+
+      function hapusUangIndivid(index) {
+        arrayUangDiMeja.splice(index, 1);
+        let audioCancel = new Audio("../../../audio/salah.mp3");
+        audioCancel.play().catch((e) => {});
+        hitungTotalMeja();
+      }
+
+      function updateUIMejaKasir() {
+        const wadah = document.getElementById("wadahUangMeja");
+        wadah.innerHTML = "";
+
+        arrayUangDiMeja.forEach((nom, index) => {
+          const divUang = document.createElement("div");
+          divUang.className = "uang-mini";
+          divUang.onclick = () => hapusUangIndivid(index);
+          divUang.innerHTML = `<img src="${masterGambarUang[nom]}">`;
+          wadah.appendChild(divUang);
+        });
+        document.getElementById("totalPapanTeks").innerText = "Rp " + totalUangDiMeja.toLocaleString("id-ID");
+      }
+
+      function validasiKembalian() {
+        if (totalUangDiMeja === soalSekarang.kembalianBenar) {
+          let audioBenar = new Audio("../../../audio/menang.mp3");
+          audioBenar.play().catch((e) => {});
+          tampilkanPopUpBerhasil(`🎉 Wah, hebat! Sisa uang kembalianmu PAS senilai <b>Rp ${soalSekarang.kembalianBenar.toLocaleString("id-ID")}</b>!<br>Celengan impianmu sekarang terisi dengan benar! 🐷✨`);
+        } else if (totalUangDiMeja > soalSekarang.kembalianBenar) {
+          let audioSalah = new Audio("../../../audio/salah.mp3");
+          audioSalah.play().catch((e) => {});
+          let lebihnya = totalUangDiMeja - soalSekarang.kembalianBenar;
+          tampilkanPopUpGagal(`⚠️ Waduh, sisa uang kembalian <b>kelebihan Rp ${lebihnya.toLocaleString("id-ID")}</b>.<br><br>Yuk ambil kembali beberapa lembar uang dari dalam celengan!`);
+        } else {
+          let audioSalah = new Audio("../../../audio/salah.mp3");
+          audioSalah.play().catch((e) => {});
+          let kurangnya = soalSekarang.kembalianBenar - totalUangDiMeja;
+          tampilkanPopUpGagal(`⚠️ Yah, uang kembaliannya masih <b>kurang Rp ${kurangnya.toLocaleString("id-ID")}</b> nih.<br><br>Ayo tambah lagi lembaran uangnya dari laci kasir!`);
+        }
+      }
+
+      function tampilkanPopUpBerhasil(pesan) {
+        document.getElementById("popupMessageBenar").innerHTML = pesan;
+        document.getElementById("successPopup").style.display = "flex";
+      }
+
+      function tampilkanPopUpGagal(pesan) {
+        document.getElementById("popupMessageSalah").innerHTML = pesan;
+        document.getElementById("failedPopup").style.display = "flex";
+      }
+
+      function tutupDanLanjutSoal() {
+        document.getElementById("successPopup").style.display = "none";
+        mulaiGameCelengan();
+      }
+
+      function tutupDanUlangiSoal() {
+        document.getElementById("failedPopup").style.display = "none";
+      }
+
+      function navigasiLanjut() {
+        alert("🎉 Luar biasa! Kamu sudah menyelesaikan tantangan level lanjutan BuVita EduPlay. Sampai jumpa di rilis level seru berikutnya!");
+      }
+
+      function navigasiKembali() {
+        window.location.href = "KembalianPintar.html";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        mulaiGameCelengan();
+      });
+    </script>
+  </body>
+</html>

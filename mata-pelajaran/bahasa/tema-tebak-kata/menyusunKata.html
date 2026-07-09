@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bahasa Indonesia: Menyusun Kata - BuVita EduPlay</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #121214;
+        background-image: radial-gradient(#252529 15%, transparent 16%);
+        background-size: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .game-container {
+        width: 100%;
+        max-width: 900px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .bahasa-header {
+        background: linear-gradient(135deg, #e67e22, #d35400);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 20px;
+        border: 4px solid black;
+        box-shadow: 6px 6px 0px black;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        text-align: center;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      .level-selector-zone {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        width: 100%;
+      }
+      .btn-level-pilih {
+        flex: 1;
+        font-family: "Fredoka One", sans-serif;
+        padding: 12px;
+        border: 3px solid black;
+        border-radius: 12px;
+        cursor: pointer;
+        color: white;
+        box-shadow: 4px 4px 0px black;
+        font-size: 1.1rem;
+        transition: 0.1s;
+        text-align: center;
+      }
+      .btn-level-pilih.active {
+        transform: translateY(4px);
+        box-shadow: 0px 0px 0px black;
+        border-color: white;
+      }
+
+      .papan-main-kata {
+        background-color: #1c1b22;
+        border: 4px solid black;
+        border-radius: 24px;
+        padding: 35px 20px;
+        width: 100%;
+        box-shadow: 6px 6px 0px black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+
+      .gambar-petunjuk-emoji {
+        font-size: 5.5rem;
+        margin-bottom: 20px;
+        filter: drop-shadow(0px 8px 0px rgba(0, 0, 0, 0.4));
+        animation: floatImg 3s ease-in-out infinite alternate;
+      }
+
+      .petunjuk-misi-teks {
+        font-family: "Nunito", sans-serif;
+        font-weight: 900;
+        color: #f1c40f;
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        text-align: center;
+      }
+
+      /* Wadah Slot Jawaban */
+      .wadah-jawaban-box {
+        display: flex;
+        gap: 14px;
+        margin-bottom: 35px;
+        min-height: 75px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .kotak-slot-item {
+        min-width: 65px;
+        height: 65px;
+        padding: 0 15px;
+        border: 3px dashed #7f8c8d;
+        border-radius: 12px;
+        background-color: #111014;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.6rem;
+        color: #e67e22;
+        box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.5);
+      }
+      .kotak-slot-item.terisi {
+        border: 3px solid black;
+        background-color: #e67e22;
+        color: white;
+        box-shadow: 3px 3px 0px black;
+      }
+
+      /* Wadah Pilihan Acak */
+      .wadah-pilihan-acak {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+        padding-top: 20px;
+        border-top: 2px dashed #333;
+      }
+
+      .tombol-blok-pilihan {
+        min-width: 65px;
+        height: 65px;
+        padding: 0 18px;
+        background-color: #2c2a38;
+        border: 3px solid black;
+        border-radius: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.6rem;
+        color: white;
+        cursor: pointer;
+        box-shadow: 0px 5px 0px black;
+        transition: 0.1s;
+      }
+      .tombol-blok-pilihan:active {
+        transform: translateY(4px);
+        box-shadow: 0px 1px 0px black;
+      }
+
+      @keyframes floatImg {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-8px);
+        }
+      }
+
+      .popup-overlay-global {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+      .popup-content-box {
+        background-color: #1c1b22;
+        border: 4px solid #2ecc71;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+      }
+      .popup-btn-next {
+        background-color: #f1b811;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 30px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+    </header>
+
+    <div class="game-container">
+      <div class="bahasa-header" id="btnSuara" onclick="putarSuaraMisi()">✏️ Bahasa Indonesia: Susun Kosakata Cerdas 🔊</div>
+
+      <div class="level-selector-zone">
+        <button class="btn-level-pilih id-dasar active" style="background-color: #2ecc71" onclick="gantiTingkatLevel('dasar')">
+          🟢 LEVEL DASAR<br /><span style="font-size: 0.75rem; font-family: &quot;Nunito&quot;; font-weight: bold">(1 Kata)</span>
+        </button>
+        <button class="btn-level-pilih id-menengah" style="background-color: #f1c40f; color: black" onclick="gantiTingkatLevel('menengah')">
+          🟡 MENENGAH<br /><span style="font-size: 0.75rem; font-family: &quot;Nunito&quot;; font-weight: bold">(2 Kata)</span>
+        </button>
+        <button class="btn-level-pilih id-lanjutan" style="background-color: #e74c3c" onclick="gantiTingkatLevel('lanjutan')">
+          🔴 LANJUTAN<br /><span style="font-size: 0.75rem; font-family: &quot;Nunito&quot;; font-weight: bold">(3 Kata)</span>
+        </button>
+      </div>
+
+      <div class="papan-main-kata">
+        <div class="gambar-petunjuk-emoji" id="txtEmojiPetunjuk">📖</div>
+        <div class="petunjuk-misi-teks" id="txtMisiPetunjuk">Misi: Susunlah huruf menjadi satu kata yang tepat!</div>
+
+        <div class="wadah-jawaban-box" id="zonaSlotJawaban"></div>
+
+        <div class="wadah-pilihan-acak" id="zonaPilihanHuruf"></div>
+      </div>
+
+      <div class="navigasi-level-box">
+        <button class="btn-nav-level btn-back" onclick="window.location.href = '../../../games.html'">⬅️ KELUAR GAME</button>
+        <button class="btn-nav-level btn-next" onclick="resetJawabanSiswa()">HAPUS ULANG 🔄</button>
+      </div>
+
+      <div id="successPopup" class="popup-overlay-global">
+        <div class="popup-content-box">
+          <div style="font-size: 5rem; margin-bottom: 15px">🌟</div>
+          <h2 style="font-family: &quot;Fredoka One&quot;; color: #2ecc71; font-size: 2.3rem; margin-bottom: 10px">LUAR BIASA!</h2>
+          <p id="popupMessage" style="font-family: &quot;Nunito&quot;; color: white; font-size: 1.2rem; margin-bottom: 25px"></p>
+          <button class="popup-btn-next" onclick="tutupDanLanjutSoal()">SOAL BERIKUTNYA ➡️</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const databaseBahasa = {
+        dasar: [
+          { target: ["B", "U", "K", "U"], tipe: "huruf", displayTeks: "BUKU", emoji: "📖", misi: "Misi: Susunlah HURUF di bawah menjadi 1 kata yang benar!", audio: "../../../audio/buku.mp3" },
+          { target: ["B", "O", "L", "A"], tipe: "huruf", displayTeks: "BOLA", emoji: "⚽", misi: "Misi: Susunlah HURUF di bawah menjadi 1 kata yang benar!", audio: "../../../audio/bola.mp3" },
+        ],
+        menengah: [
+          { target: ["BUKU", "BARU"], tipe: "kata", displayTeks: "BUKU BARU", emoji: "📚", misi: "Misi: Susunlah 2 KATA menjadi frasa benda yang tepat!", audio: "../../../audio/buku_baru.mp3" },
+          { target: ["BOLA", "BESAR"], tipe: "kata", displayTeks: "BOLA BESAR", emoji: "🏀", misi: "Misi: Susunlah 2 KATA menjadi frasa benda yang tepat!", audio: "../../../audio/bola_besar.mp3" },
+        ],
+        lanjutan: [
+          { target: ["IBU", "BACA", "BUKU"], tipe: "kata", displayTeks: "IBU BACA BUKU", emoji: "👩‍🏫", misi: "Misi: Susunlah 3 KATA menjadi susunan kalimat utuh!", audio: "../../../audio/ibu_baca_buku.mp3" },
+          { target: ["ADIK", "TENDANG", "BOLA"], tipe: "kata", displayTeks: "ADIK TENDANG BOLA", emoji: "👦", misi: "Misi: Susunlah 3 KATA menjadi susunan kalimat utuh!", audio: "../../../audio/adik_tendang_bola.mp3" },
+        ],
+      };
+
+      let levelAktif = "dasar";
+      let soalAktif = null;
+      let susunanSiswa = [];
+
+      function gantiTingkatLevel(levelBaru) {
+        levelAktif = levelBaru;
+        document.querySelectorAll(".btn-level-pilih").forEach((b) => b.classList.remove("active"));
+        document.querySelector(`.id-${levelBaru}`).classList.add("active");
+        muatSoalBahasa();
+      }
+
+      function muatSoalBahasa() {
+        susunanSiswa = [];
+        const koleksi = databaseBahasa[levelAktif];
+        const acak = Math.floor(Math.random() * koleksi.length);
+        soalAktif = koleksi[acak];
+
+        document.getElementById("txtEmojiPetunjuk").innerText = soalAktif.emoji;
+        document.getElementById("txtMisiPetunjuk").innerText = soalAktif.misi;
+
+        // Render Slot Kosong
+        const zonaSlot = document.getElementById("zonaSlotJawaban");
+        zonaSlot.innerHTML = "";
+        soalAktif.target.forEach((item, idx) => {
+          const slot = document.createElement("div");
+          slot.className = "kotak-slot-item";
+          slot.id = `slot-${idx}`;
+          zonaSlot.appendChild(slot);
+        });
+
+        // Render Pilihan Acak
+        const zonaPilihan = document.getElementById("zonaPilihanHuruf");
+        zonaPilihan.innerHTML = "";
+        let itemAcak = [...soalAktif.target].sort(() => Math.random() - 0.5);
+
+        itemAcak.forEach((item, idx) => {
+          const btn = document.createElement("div");
+          btn.className = "tombol-blok-pilihan";
+          btn.innerText = item;
+          btn.id = `btn-item-${idx}`;
+          btn.onclick = () => pilihItem(item, btn.id);
+          zonaPilihan.appendChild(btn);
+        });
+
+        putarSuaraMisi();
+      }
+
+      function pilihItem(isi, idTombol) {
+        if (susunanSiswa.length < soalAktif.target.length) {
+          const indexKosong = susunanSiswa.length;
+          const slot = document.getElementById(`slot-${indexKosong}`);
+
+          slot.innerText = isi;
+          slot.classList.add("terisi");
+
+          susunanSiswa.push({ isi: isi, idAsal: idTombol });
+          document.getElementById(idTombol).style.visibility = "hidden";
+
+          new Audio("../../../audio/benar.mp3").play().catch(() => {});
+
+          if (susunanSiswa.length === soalAktif.target.length) {
+            cekKebenaranJawaban();
+          }
+        }
+      }
+
+      function cekKebenaranJawaban() {
+        let susunanBenar = true;
+        for (let i = 0; i < soalAktif.target.length; i++) {
+          if (susunanSiswa[i].isi !== soalAktif.target[i]) {
+            susunanBenar = false;
+            break;
+          }
+        }
+
+        if (susunanBenar) {
+          setTimeout(() => {
+            new Audio("../../../audio/menang.mp3").play().catch(() => {});
+            document.getElementById("popupMessage").innerHTML = `Hebat! Susunan yang tepat adalah:<br><b style="color:#2ecc71; font-size:1.8rem;">${soalAktif.displayTeks}</b>`;
+            document.getElementById("successPopup").style.display = "flex";
+          }, 300);
+        } else {
+          setTimeout(() => {
+            new Audio("../../../audio/salah.mp3").play().catch(() => {});
+            alert("❌ Susunannya belum tepat nih, ayo hapus dan coba urutkan lagi!");
+            resetJawabanSiswa();
+          }, 300);
+        }
+      }
+
+      function resetJawabanSiswa() {
+        susunanSiswa = [];
+        document.querySelectorAll(".tombol-blok-pilihan").forEach((b) => (b.style.visibility = "visible"));
+        document.querySelectorAll(".kotak-slot-item").forEach((s) => {
+          s.innerText = "";
+          s.classList.remove("terisi");
+        });
+      }
+
+      function putarSuaraMisi() {
+        if (soalAktif && soalAktif.audio) {
+          new Audio(soalAktif.audio).play().catch((e) => console.log("Audio ready"));
+        }
+      }
+
+      function tutupDanLanjutSoal() {
+        document.getElementById("successPopup").style.display = "none";
+        muatSoalBahasa();
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        muatSoalBahasa();
+      });
+    </script>
+  </body>
+</html>

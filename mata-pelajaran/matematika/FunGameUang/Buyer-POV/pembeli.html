@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuVita Belanja Pintar - POV Pembeli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="pembeli.css" />
+  </head>
+  <body class="halaman-game-pembeli">
+    <!-- POPUP 1: WELCOME SCREEN -->
+    <div id="popup-welcome" class="custom-popup-overlay">
+      <div class="custom-popup-box">
+        <h2>👋 Selamat Datang di BuVita Belanja Pintar!</h2>
+        <p>Hari ini kita akan belajar menjadi pembeli yang mandiri. Yuk, bantu Ibu membeli barang yang ada di catatan belanjaan ya!</p>
+        <button class="btn-popup-primary" onclick="startGame()">Mulai Belanja 🛒</button>
+      </div>
+    </div>
+
+    <!-- POPUP 2: SELESAI / TRANSAKSI SUKSES -->
+    <div id="popup-result" class="custom-popup-overlay" style="display: none">
+      <div class="custom-popup-box popup-success">
+        <h2 id="result-title">🎉 Horeee Hebat!</h2>
+        <p id="result-message">Kamu berhasil belanja dengan benar!</p>
+        <button class="btn-popup-primary" onclick="resetGame()">Main Lagi 🔄</button>
+      </div>
+    </div>
+
+    <header class="main-header">
+      <div class="logo-area">
+        <img src="assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+    </header>
+
+    <div class="buyer-container">
+      <div class="buyer-top-bar">
+        <div class="wallet-status">👛 Uang di Dompet: <span id="current-cash">Rp 50.000</span></div>
+        <div class="mission-status">🎯 Target: Belanja Mandiri</div>
+      </div>
+
+      <!-- SISI KIRI -->
+      <div class="left-panel">
+        <div class="notepad">
+          <h3>📝 Catatan Belanja:</h3>
+          <ul id="shopping-list">
+            <!-- Diisi otomatis via JS (Hasil Shuffle) -->
+          </ul>
+        </div>
+        <div class="cart-area">
+          <h4>🛒 Keranjang Belanja:</h4>
+          <div id="cart-items" class="cart-basket">
+            <p class="empty-text">Keranjang kosong...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SISI KANAN -->
+      <div class="right-panel">
+        <!-- RAK BARANG -->
+        <div id="view-shelf">
+          <div class="shelf-title">🏪 Pilih Barang di Rak:</div>
+          <div id="shelf-container" class="market-shelf">
+            <!-- Diisi otomatis & di-shuffle via JS -->
+          </div>
+          <button id="btn-go-to-cashier" style="display: none" onclick="goToCashier()">🏃 Pergi ke Kasir</button>
+        </div>
+
+        <!-- MEJA KASIR -->
+        <div id="view-cashier" style="display: none; flex-direction: column; height: 100%">
+          <div class="shelf-title">🧮 Meja Kasir: <span id="text-bill-tag" style="color: #d32f2f">Total Tagihan: Rp 0</span></div>
+
+          <div class="cashier-tray">
+            <p>💵 Uang di Nampan: <b id="money-placed">Rp 0</b></p>
+          </div>
+
+          <!-- DOMPET DENGAN ASSETS PNG KAMU -->
+          <div class="wallet-inside">
+            <p style="font-weight: bold; font-size: 14px; margin-bottom: 8px; color: #455a64">Klik uang untuk membayar:</p>
+            <div class="money-grid">
+              <div class="bill-wrapper" onclick="payWithBill(2000)"><img src="assets/uang-2k.png" alt="Rp 2.000" class="img-money-bill" /></div>
+              <div class="bill-wrapper" onclick="payWithBill(5000)"><img src="assets/uang-5k.png" alt="Rp 5.000" class="img-money-bill" /></div>
+              <div class="bill-wrapper" onclick="payWithBill(10000)"><img src="assets/uang-10k.png" alt="Rp 10.000" class="img-money-bill" /></div>
+              <div class="bill-wrapper" onclick="payWithBill(20000)"><img src="assets/uang-20k.png" alt="Rp 20.000" class="img-money-bill" /></div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: auto">
+            <button id="btn-reset-wallet" onclick="resetPaymentTray()">🔄 Ambil Uang</button>
+            <button id="btn-confirm-pay" onclick="finishTransaction()">✅ SERAHKAN UANG</button>
+          </div>
+        </div>
+
+        <div class="buyer-instruction" onclick="triggerAudioInstruction()">
+          <p id="instruction-text">"Memuat petunjuk..." 🔊</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="pembeli.js"></script>
+  </body>
+</html>

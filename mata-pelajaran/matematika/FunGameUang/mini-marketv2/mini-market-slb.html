@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>Kasir Cilik SLB — Simulator Minimarket</title>
+    <link rel="stylesheet" href="mini-market-slb.css" />
+  </head>
+  <body>
+    <!-- =================================================================
+         POPUP SELAMAT DATANG
+         Sengaja dibuat sesederhana mungkin: hanya 2 pilihan besar,
+         tidak ada teks panjang yang perlu dibaca sendiri (ada tombol
+         dengar instruksi untuk siswa non-verbal / belum lancar baca).
+    ================================================================== -->
+    <div id="mm-popup-selamat-datang" class="mm-popup-overlay">
+      <div class="mm-popup-content">
+        <h2>Selamat Datang di<br />Kasir Cilik!</h2>
+        <p>Ayo bantu Bu Vita jadi kasir hari ini.</p>
+
+        <div class="mm-popup-buttons">
+          <button id="mm-btn-instruksi" onclick="mmMainkanInstruksiAwal()" type="button">
+            <!-- Ikon speaker -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.5 8.5a5 5 0 0 1 0 7"></path><path d="M18.5 5.5a9 9 0 0 1 0 13"></path></svg>
+            Dengarkan Instruksi
+          </button>
+          <button id="mm-btn-mulai" onclick="mmMulaiPermainan()" type="button">
+            <!-- Ikon play -->
+            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+            Langsung Main
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================
+         POPUP TRANSAKSI SUKSES
+    ================================================================== -->
+    <div id="mm-popup-sukses" class="mm-popup-overlay" style="display: none">
+      <div class="mm-popup-content mm-success-content">
+        <div class="mm-success-icon" aria-hidden="true">✓</div>
+        <h2>Hebat, Berhasil!</h2>
+        <p id="mm-pesan-sukses">Kamu berhasil menghitung belanjaan senilai Rp 0</p>
+
+        <div class="mm-popup-buttons">
+          <button id="mm-btn-pembeli-berikutnya" onclick="mmTutupPopupSukses()" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            Pembeli Berikutnya
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================
+         POPUP PENGATURAN (khusus guru/pendamping)
+         Semua pengaturan tersimpan otomatis di browser (localStorage)
+         lewat fungsi mmSimpanPengaturan() di file JS.
+    ================================================================== -->
+    <div id="mm-popup-pengaturan" class="mm-popup-overlay" style="display: none">
+      <div class="mm-popup-content">
+        <h2>Pengaturan</h2>
+        <p>Untuk guru / pendamping. Sesuaikan dengan kebutuhan siswa.</p>
+
+        <div class="mm-pengaturan-grup">
+          <span>🔊 Volume Suara</span>
+          <input
+            type="range"
+            id="mm-slider-volume"
+            class="mm-slider-volume"
+            min="0"
+            max="100"
+            value="80"
+            oninput="mmUbahVolume(this.value)"
+            aria-label="Pengatur volume suara"
+          />
+        </div>
+
+        <div class="mm-pengaturan-grup">
+          <span>🔤 Ukuran Teks</span>
+          <div class="mm-pilihan-baris" id="mm-grup-ukuran-teks">
+            <button type="button" onclick="mmSetUkuranTeks('normal')" data-nilai="normal">Normal</button>
+            <button type="button" onclick="mmSetUkuranTeks('besar')" data-nilai="besar">Besar</button>
+            <button type="button" onclick="mmSetUkuranTeks('sangat-besar')" data-nilai="sangat-besar">Sangat Besar</button>
+          </div>
+        </div>
+
+        <div class="mm-pengaturan-grup">
+          <span>🎨 Tampilan</span>
+          <div class="mm-pilihan-baris" id="mm-grup-kontras">
+            <button type="button" onclick="mmSetKontrasTinggi(false)" data-nilai="biasa">Warna Biasa</button>
+            <button type="button" onclick="mmSetKontrasTinggi(true)" data-nilai="tinggi">Kontras Tinggi</button>
+          </div>
+        </div>
+
+        <div class="mm-pengaturan-grup">
+          <span>🎬 Animasi</span>
+          <div class="mm-pilihan-baris" id="mm-grup-animasi">
+            <button type="button" onclick="mmSetGerakBerkurang(false)" data-nilai="normal">Animasi Normal</button>
+            <button type="button" onclick="mmSetGerakBerkurang(true)" data-nilai="kurang">Kurangi Animasi</button>
+          </div>
+        </div>
+
+        <div class="mm-pengaturan-grup">
+          <span>🛒 Jumlah Barang per Pembeli</span>
+          <div class="mm-pilihan-baris" id="mm-grup-kesulitan">
+            <button type="button" onclick="mmSetKesulitan('mudah')" data-nilai="mudah">Mudah (1-2)</button>
+            <button type="button" onclick="mmSetKesulitan('sedang')" data-nilai="sedang">Sedang (2-3)</button>
+            <button type="button" onclick="mmSetKesulitan('menantang')" data-nilai="menantang">Menantang (3-4)</button>
+          </div>
+        </div>
+
+        <div class="mm-popup-buttons">
+          <button id="mm-btn-tutup-pengaturan" onclick="mmTutupPengaturan()" type="button" style="background: var(--mm-primary); color: #fff; box-shadow: 0 4px 0 var(--mm-primary-dark)">
+            Selesai
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio instruksi panjang (dimainkan dari popup awal) -->
+    <audio id="mm-audio-instruksi" src="assets/audio-instruksi.mp3" preload="auto"></audio>
+
+    <div class="mm-game-container">
+      <!-- ============================================================
+           TOP BAR
+      ============================================================= -->
+      <div class="mm-top-bar">
+        <div class="mm-skor">Pendapatan<br /><span id="mm-total-pendapatan">Rp 0</span></div>
+        <div class="mm-skor">Pembeli Ke<br /><span id="mm-jumlah-pembeli">1</span></div>
+        <button class="mm-icon-button" onclick="mmBukaPengaturan()" type="button" aria-label="Buka pengaturan">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+
+      <!-- ============================================================
+           AREA UTAMA (pembungkus toko + mesin kasir)
+           Di HP/tablet potret, dua bagian ini ditumpuk (atas-bawah).
+           Di layar lebar (desktop/tablet landscape), CSS akan
+           menyusunnya berdampingan (kiri-kanan) seperti meja kasir
+           sungguhan -- lihat media query "min-width: 1100px" di file
+           CSS. Jangan hapus div pembungkus ini, dipakai sebagai
+           "saklar" tata letak lewat CSS saja, tanpa perlu JS.
+      ============================================================= -->
+      <div class="mm-area-utama">
+      <!-- AREA TOKO -->
+      <div class="mm-shop-area" id="mm-latar-toko" style="background-image: url(&quot;assets/bg-minimarket.jpg&quot;)">
+        <!-- Titik-titik progres barang (bantuan visual non-verbal) -->
+        <div class="mm-progres-barang" id="mm-progres-barang" aria-hidden="true"></div>
+
+        <!-- Tombol ulangi instruksi: selalu tersedia -->
+        <button class="mm-tombol-ulangi" id="mm-tombol-ulangi" onclick="mmUlangiInstruksi()" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          Ulangi
+        </button>
+
+        <img src="assets/pembeli-1.png" alt="Pembeli" class="mm-customer-img" id="mm-sprite-pembeli" />
+
+        <div class="mm-item-bubble">
+          <div class="mm-price-tag" id="mm-label-harga">Rp 15.000</div>
+          <img src="assets/barang-mie.png" alt="Barang" class="mm-item-img" id="mm-sprite-barang" />
+        </div>
+
+        <!-- Maskot + gelembung bicara: pusat instruksi bermuatan audio+visual -->
+        <div class="mm-maskot-wrap">
+          <div class="mm-gelembung-bicara" id="mm-teks-instruksi" role="status" aria-live="polite">
+            Masukkan harga barang lalu tekan tombol Tambah.
+          </div>
+          <svg class="mm-maskot-svg" id="mm-maskot" viewBox="0 0 100 110" aria-hidden="true">
+            <ellipse cx="50" cy="60" rx="34" ry="30" fill="#3E7CB1" />
+            <circle cx="50" cy="34" r="26" fill="#F7D6B0" />
+            <circle cx="40" cy="30" r="4" fill="#33404E" />
+            <circle cx="60" cy="30" r="4" fill="#33404E" />
+            <rect class="mm-maskot-mulut" x="40" y="44" width="20" height="6" rx="3" fill="#C46B54" />
+            <path d="M18 34 a32 32 0 0 1 64 0" fill="none" stroke="#8A5A2B" stroke-width="10" stroke-linecap="round" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- ============================================================
+           MESIN KASIR
+      ============================================================= -->
+      <div class="mm-pos-terminal">
+        <div class="mm-screen-container">
+          <!-- Layar Kiri: Struk -->
+          <div class="mm-receipt-screen">
+            <div class="mm-receipt-header">Struk Belanja</div>
+            <ul id="mm-daftar-struk"></ul>
+            <div class="mm-receipt-total">TOTAL: <span id="mm-total-struk">Rp 0</span></div>
+          </div>
+
+          <!-- Layar Kanan: Numpad -->
+          <div class="mm-numpad-screen">
+            <div class="mm-numpad-display" id="mm-layar-hitung" aria-live="polite">0</div>
+
+            <!-- Baris bantuan: skafolding untuk slow learner, TIDAK
+                 langsung memberi jawaban, hanya petunjuk bertahap -->
+            <div class="mm-baris-bantuan">
+              <button class="mm-tombol-bantuan" onclick="mmMintaBantuan()" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                Beri Petunjuk
+              </button>
+            </div>
+
+            <div class="mm-numpad-grid">
+              <button onclick="mmInputAngka('7')" type="button">7</button>
+              <button onclick="mmInputAngka('8')" type="button">8</button>
+              <button onclick="mmInputAngka('9')" type="button">9</button>
+              <button class="mm-btn-tambah" onclick="mmAksiTambah()" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span class="mm-label-kecil">Tambah</span>
+              </button>
+
+              <button onclick="mmInputAngka('4')" type="button">4</button>
+              <button onclick="mmInputAngka('5')" type="button">5</button>
+              <button onclick="mmInputAngka('6')" type="button">6</button>
+              <button class="mm-btn-hapus-semua" onclick="mmAksiBersihkan()" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg>
+                <span class="mm-label-kecil">Bersihkan</span>
+              </button>
+
+              <button onclick="mmInputAngka('1')" type="button">1</button>
+              <button onclick="mmInputAngka('2')" type="button">2</button>
+              <button onclick="mmInputAngka('3')" type="button">3</button>
+              <button class="mm-btn-total" onclick="mmAksiTotal()" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"></rect><line x1="8" y1="8" x2="16" y2="8"></line><line x1="8" y1="12" x2="16" y2="12"></line><line x1="8" y1="16" x2="12" y2="16"></line></svg>
+                <span class="mm-label-kecil">Total</span>
+              </button>
+
+              <button onclick="mmInputAngka('0')" type="button">0</button>
+              <button onclick="mmInputAngka('00')" type="button">00</button>
+              <button class="mm-btn-hapus-satu" onclick="mmAksiHapusSatu()" type="button" aria-label="Hapus satu angka">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg>
+              </button>
+              <button class="mm-btn-bayar" onclick="mmAksiBayar()" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle></svg>
+                <span class="mm-label-kecil">BAYAR</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /.mm-pos-terminal -->
+      </div>
+      <!-- /.mm-area-utama -->
+    </div>
+
+    <!-- ================================================================
+         AUDIO EFEK
+         Catatan file yang PERLU kamu siapkan di folder assets/:
+           - audio-klik.mp3       -> bunyi pendek tiap tekan tombol angka
+           - audio-benar.mp3      -> nada positif saat 1 barang berhasil di-scan
+           - audio-coba-lagi.mp3  -> nada LEMBUT (bukan buzzer keras) saat salah
+           - audio-cash.mp3       -> sudah ada, dipakai saat pembayaran sukses
+           - audio-sukses.mp3     -> nada rayaan singkat saat transaksi selesai
+         Jika salah satu file belum ada, game TETAP jalan normal (lihat
+         fungsi mmPutarSuara di JS yang menangkap error secara aman).
+    ================================================================= -->
+    <audio id="mm-audio-klik" src="assets/audio-klik.mp3" preload="auto"></audio>
+    <audio id="mm-audio-benar" src="assets/audio-benar.mp3" preload="auto"></audio>
+    <audio id="mm-audio-coba-lagi" src="assets/audio-coba-lagi.mp3" preload="auto"></audio>
+    <audio id="mm-audio-cash" src="assets/audio-cash.mp3" preload="auto"></audio>
+    <audio id="mm-audio-sukses" src="assets/audio-sukses.mp3" preload="auto"></audio>
+
+    <script src="mini-market-slb.js"></script>
+  </body>
+</html>

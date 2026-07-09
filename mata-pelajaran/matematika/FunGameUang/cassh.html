@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Supermarket Cashier Simulator: School Edition</title>
+    <style>
+      :root {
+        --bg-main: #0f172a;
+        --bg-surface: #1e293b;
+        --bg-accent: #334155;
+        --primary: #10b981;
+        --primary-hover: #059669;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --neon-blue: #38bdf8;
+        --danger: #ef4444;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        user-select: none;
+      }
+
+      body {
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        height: 100vh;
+        display: flex;
+        overflow: hidden;
+      }
+
+      /* GAME LAYOUT */
+      #game-container {
+        display: grid;
+        grid-template-columns: 350px 1fr 400px;
+        width: 100vw;
+        height: 100vh;
+        gap: 10px;
+        padding: 10px;
+      }
+
+      /* PANEL LEFT: CUSTOMER & BELANJAAN */
+      .panel-customer {
+        background: var(--bg-surface);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        border: 1px solid var(--bg-accent);
+      }
+
+      .customer-avatar {
+        height: 120px;
+        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+      }
+
+      .conveyor-belt {
+        flex: 1;
+        background: #111827;
+        border-radius: 8px;
+        padding: 10px;
+        border-left: 4px dashed #374151;
+        border-right: 4px dashed #374151;
+        overflow-y: auto;
+      }
+
+      .item-card {
+        background: var(--bg-accent);
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          border-color 0.2s;
+        border: 1px solid transparent;
+      }
+
+      .item-card:hover {
+        transform: scale(1.02);
+        border-color: var(--neon-blue);
+      }
+
+      /* PANEL CENTER: POS SCANNER & CASHIER MACHINE */
+      .panel-pos {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        gap: 10px;
+      }
+
+      .hud-stats {
+        background: var(--bg-surface);
+        padding: 15px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: space-around;
+        border: 1px solid var(--bg-accent);
+      }
+
+      .stat-box {
+        text-align: center;
+      }
+      .stat-box p {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      .stat-box h3 {
+        font-size: 1.5rem;
+        color: var(--neon-blue);
+      }
+
+      .pos-machine {
+        background: #020617;
+        border-radius: 12px;
+        border: 4px solid #475569;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+      }
+
+      .pos-screen {
+        background: #042f1a;
+        border: 2px solid var(--primary);
+        border-radius: 6px;
+        padding: 15px;
+        font-family: "Courier New", Courier, monospace;
+        color: #10b981;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+      }
+
+      .screen-rows {
+        overflow-y: auto;
+        flex: 1;
+        font-size: 0.9rem;
+      }
+
+      .screen-total {
+        border-top: 1px dashed var(--primary);
+        padding-top: 10px;
+        font-size: 1.3rem;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .cash-drawer {
+        background: var(--bg-surface);
+        border-radius: 8px;
+        padding: 15px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .money-btn {
+        background: #1e293b;
+        color: #10b981;
+        border: 2px solid #10b981;
+        padding: 12px;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1.1rem;
+      }
+
+      .money-btn:hover {
+        background: #10b981;
+        color: #fff;
+      }
+
+      .numpad-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .input-display {
+        background: #1e293b;
+        border: 1px solid var(--bg-accent);
+        padding: 10px;
+        border-radius: 6px;
+        text-align: right;
+        font-size: 1.5rem;
+        color: var(--neon-blue);
+        height: 50px;
+      }
+
+      .numpad {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        flex: 1;
+      }
+
+      .num-btn {
+        background: var(--bg-accent);
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.1s;
+      }
+
+      .num-btn:hover {
+        background: #475569;
+      }
+      .num-btn.action {
+        background: var(--primary);
+      }
+      .num-btn.action:hover {
+        background: var(--primary-hover);
+      }
+      .num-btn.clear {
+        background: var(--danger);
+      }
+
+      /* PANEL RIGHT: STRUK & MANUAL BOOK */
+      .panel-receipt {
+        background: var(--bg-surface);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        border: 1px solid var(--bg-accent);
+      }
+
+      .receipt-paper {
+        background: #fff;
+        color: #000;
+        padding: 20px;
+        font-family: "Courier New", Courier, monospace;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        min-height: 300px;
+        font-size: 0.85rem;
+      }
+
+      .receipt-header {
+        text-align: center;
+        margin-bottom: 10px;
+        border-bottom: 1px dashed #000;
+        padding-bottom: 5px;
+      }
+
+      .receipt-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+      }
+
+      .receipt-total {
+        border-top: 1px dashed #000;
+        margin-top: 10px;
+        padding-top: 5px;
+        font-weight: bold;
+      }
+
+      .btn-submit-payment {
+        width: 100%;
+        padding: 15px;
+        background: var(--primary);
+        border: none;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .btn-submit-payment:hover {
+        background: var(--primary-hover);
+      }
+
+      /* UTIL */
+      .scanner-laser {
+        height: 4px;
+        background: red;
+        box-shadow: 0 0 8px red;
+        animation: scan 2s infinite ease-in-out;
+        position: relative;
+        display: none;
+      }
+
+      @keyframes scan {
+        0% {
+          top: 0%;
+        }
+        50% {
+          top: 100%;
+        }
+        100% {
+          top: 0%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <div class="panel-customer">
+        <div class="customer-avatar" id="customer-pic">🧍</div>
+        <div style="text-align: center">
+          <h4 id="customer-name">Pelanggan #1</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted)" id="customer-demand">Membayar dengan uang pas/kembalian</p>
+        </div>
+        <h5 style="color: var(--text-muted)">Ban Berjalan (Klik Barang untuk Scan)</h5>
+        <div class="conveyor-belt" id="belt-items"></div>
+      </div>
+
+      <div class="panel-pos">
+        <div class="hud-stats">
+          <div class="stat-box">
+            <p>Skor / Profit</p>
+            <h3 id="score-val">Rp 0</h3>
+          </div>
+          <div class="stat-box">
+            <p>Pelanggan Berhasil</p>
+            <h3 id="customer-count">0</h3>
+          </div>
+          <div class="stat-box">
+            <p>Waktu</p>
+            <h3 id="timer-val">60s</h3>
+          </div>
+        </div>
+
+        <div class="pos-machine">
+          <div class="pos-screen">
+            <div style="font-size: 0.8rem; border-bottom: 1px solid #10b981; padding-bottom: 5px">SMART CASHIER V.1.0 - BARANG SEKOLAH</div>
+            <div class="screen-rows" id="screen-list">
+              <div style="color: var(--text-muted); padding: 20px 0; text-align: center">Silahkan scan barang pertama...</div>
+            </div>
+            <div class="screen-total">
+              <span>TOTAL:</span>
+              <span id="screen-total-val">Rp 0</span>
+            </div>
+          </div>
+
+          <div class="numpad-container">
+            <div class="input-display" id="cash-input">0</div>
+            <div class="numpad">
+              <button class="num-btn" onclick="pressNum('7')">7</button>
+              <button class="num-btn" onclick="pressNum('8')">8</button>
+              <button class="num-btn" onclick="pressNum('9')">9</button>
+              <button class="num-btn" onclick="pressNum('4')">4</button>
+              <button class="num-btn" onclick="pressNum('5')">5</button>
+              <button class="num-btn" onclick="pressNum('6')">6</button>
+              <button class="num-btn" onclick="pressNum('1')">1</button>
+              <button class="num-btn" onclick="pressNum('2')">2</button>
+              <button class="num-btn" onclick="pressNum('3')">3</button>
+              <button class="num-btn clear" onclick="pressClear()">C</button>
+              <button class="num-btn" onclick="pressNum('0')">0</button>
+              <button class="num-btn action" onclick="pressNum('000')">000</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cash-drawer">
+          <button class="money-btn" onclick="quickCash(20000)">Rp 20k</button>
+          <button class="money-btn" onclick="quickCash(50000)">Rp 50k</button>
+          <button class="money-btn" onclick="quickCash(100000)">Rp 100k</button>
+          <button class="money-btn" onclick="pressClear()">Reset Uang</button>
+        </div>
+      </div>
+
+      <div class="panel-receipt">
+        <h3 style="font-size: 1.1rem; color: var(--neon-blue)">Struk Fisik Penjualan</h3>
+        <div class="receipt-paper">
+          <div class="receipt-header">
+            <h4>STATIONERY SUPERMARKET</h4>
+            <p>Maju Bersama Pintar</p>
+          </div>
+          <div id="receipt-body" style="flex: 1"></div>
+          <div class="receipt-total" id="receipt-total-bill">TOTAL AKHIR: Rp 0</div>
+          <div id="receipt-payment-info" style="margin-top: 10px; border-top: 1px dashed #000; font-size: 0.8rem"></div>
+        </div>
+        <button class="btn-submit-payment" onclick="processTransaction()">PROSES TRANSAKSI (ENTER)</button>
+      </div>
+    </div>
+
+    <script>
+      // DATA 10 MACAM BARANG SEKOLAH (PROFESIONAL DATABASE)
+      const ITEM_DATABASE = [
+        { id: "B01", name: "Buku Tulis Kiky A5", price: 7500, icon: "📖" },
+        { id: "B02", name: "Pensil Faber C. 2B", price: 4000, icon: "✏️" },
+        { id: "B03", name: "Pulpen Gel Zebra 0.5", price: 12000, icon: "🖊️" },
+        { id: "B04", name: "Penghapus Mono Tombow", price: 5000, icon: "🧼" },
+        { id: "B05", name: "Penggaris Besi 30cm", price: 8500, icon: "📏" },
+        { id: "B06", name: "Kotak Pensil Logam", price: 25000, icon: "🧳" },
+        { id: "B07", name: "Ransel Sekolah Eiger", price: 185000, icon: "🎒" },
+        { id: "B08", name: "Buku Gambar Sketsa A4", price: 15000, icon: "🎨" },
+        { id: "B09", name: "Kalkulator Casio Sains", price: 145000, icon: "🔢" },
+        { id: "B10", name: "Stipo / Correction Tape", price: 9000, icon: "✂️" },
+      ];
+
+      const AVATARS = ["🧑‍🎓", "👩‍🏫", "👨‍🚀", "👩‍🎨", "👨‍💻"];
+
+      // STATE GAME VARIABLE
+      let currentCart = [];
+      let scannedCart = [];
+      let scannedTotal = 0;
+      let customerCashGiven = 0;
+      let inputCashString = "0";
+      let score = 0;
+      let customerCounter = 0;
+      let timeLeft = 90;
+      let gameInterval;
+
+      // INISIALISASI GAME
+      function initGame() {
+        generateCustomer();
+        startTimer();
+        updateHUD();
+      }
+
+      function startTimer() {
+        gameInterval = setInterval(() => {
+          timeLeft--;
+          document.getElementById("timer-val").innerText = timeLeft + "s";
+          if (timeLeft <= 0) {
+            clearInterval(gameInterval);
+            alert(`Waktu Habis! Game Selesai.\nTotal Profit Anda: Rp ${score.toLocaleString("id-ID")}\nPelanggan Terlayani: ${customerCounter}`);
+            resetGame();
+          }
+        }, 1000);
+      }
+
+      // GENERATE KONSUMEN & BELANJAAN ACAK (PRO-ALGORITMA)
+      function generateCustomer() {
+        scannedCart = [];
+        scannedTotal = 0;
+        inputCashString = "0";
+        document.getElementById("cash-input").innerText = "0";
+        document.getElementById("screen-list").innerHTML = "";
+        document.getElementById("screen-total-val").innerText = "Rp 0";
+        document.getElementById("receipt-body").innerHTML = "";
+        document.getElementById("receipt-payment-info").innerHTML = "";
+        document.getElementById("receipt-total-bill").innerText = "TOTAL AKHIR: Rp 0";
+
+        // Pilih avatar & nama acak
+        const randomAvatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+        document.getElementById("customer-pic").innerText = randomAvatar;
+        document.getElementById("customer-name").innerText = `Pelanggan #${customerCounter + 1}`;
+
+        // Bangun Keranjang Belanjaan Acak (3-6 barang acak)
+        currentCart = [];
+        const itemCount = Math.floor(Math.random() * 4) + 3;
+        let realTotalCost = 0;
+
+        for (let i = 0; i < itemCount; i++) {
+          const randomItem = ITEM_DATABASE[Math.floor(Math.random() * ITEM_DATABASE.length)];
+          currentCart.push(randomItem);
+          realTotalCost += randomItem.price;
+        }
+
+        // Tentukan berapa uang pecahan yang dibawa pembeli (pasti di atas total belanja)
+        const nominalPecahan = [10000, 20000, 50000, 100000, 200000];
+        customerCashGiven = nominalPecahan.find((v) => v >= realTotalCost) || Math.ceil(realTotalCost / 50000) * 50000;
+
+        document.getElementById("customer-demand").innerText = `Membayar dengan uang: Rp ${customerCashGiven.toLocaleString("id-ID")}`;
+
+        renderBelt();
+      }
+
+      // RENDER BARANG DI CONVEYOR BELT
+      function renderBelt() {
+        const belt = document.getElementById("belt-items");
+        belt.innerHTML = "";
+        currentCart.forEach((item, index) => {
+          const card = document.createElement("div");
+          card.className = "item-card";
+          card.onclick = () => scanItem(index);
+          card.innerHTML = `
+                    <span>${item.icon} <b>${item.name}</b></span>
+                    <span>Rp ${item.price.toLocaleString("id-ID")}</span>
+                `;
+          belt.appendChild(card);
+        });
+      }
+
+      // FUNGSI SCAN BARANG (INTERAKTIF POS MACHINE)
+      function scanItem(index) {
+        const item = currentCart[index];
+
+        // Masuk keranjang kasir
+        scannedCart.push(item);
+        scannedTotal += item.price;
+
+        // Hapus dari ban berjalan pelanggan
+        currentCart.splice(index, 1);
+        renderBelt();
+
+        // Efek suara bip fiktif (bisa ditambah audio asli)
+        // Update Layar Monitor Kasir
+        const screenList = document.getElementById("screen-list");
+        if (scannedCart.length === 1) screenList.innerHTML = ""; // bersihkan placeholder
+
+        const row = document.createElement("div");
+        row.style.display = "flex";
+        row.style.justifyContent = "space-between";
+        row.style.marginBottom = "4px";
+        row.innerHTML = `<span>${item.name}</span> <span>Rp ${item.price.toLocaleString("id-ID")}</span>`;
+        screenList.appendChild(row);
+
+        document.getElementById("screen-total-val").innerText = `Rp ${scannedTotal.toLocaleString("id-ID")}`;
+
+        // Update Struk Cetak Fisik secara realtime
+        renderReceipt();
+      }
+
+      function renderReceipt() {
+        const receiptBody = document.getElementById("receipt-body");
+        receiptBody.innerHTML = "";
+        scannedCart.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "receipt-item";
+          div.innerHTML = `<span>${item.name}</span><span>Rp ${item.price.toLocaleString("id-ID")}</span>`;
+          receiptBody.appendChild(div);
+        });
+        document.getElementById("receipt-total-bill").innerText = `TOTAL AKHIR: Rp ${scannedTotal.toLocaleString("id-ID")}`;
+      }
+
+      // KONTROL NUMPAD & INPUT UANG KEMBALIAN
+      function pressNum(num) {
+        if (inputCashString === "0") {
+          inputCashString = num;
+        } else {
+          inputCashString += num;
+        }
+        document.getElementById("cash-input").innerText = parseInt(inputCashString).toLocaleString("id-ID");
+      }
+
+      function pressClear() {
+        inputCashString = "0";
+        document.getElementById("cash-input").innerText = "0";
+      }
+
+      function quickCash(amount) {
+        inputCashString = amount.toString();
+        document.getElementById("cash-input").innerText = amount.toLocaleString("id-ID");
+      }
+
+      // VALIDASI TRANSAKSI DAN KEMBALIAN (INTI ATURAN GAME)
+      function processTransaction() {
+        if (currentCart.length > 0) {
+          alert("Peringatan: Masih ada barang di ban berjalan yang belum di-scan!");
+          return;
+        }
+
+        const playerInputCash = parseInt(inputCashString);
+        const exactChangeNeeded = playerInputCash - scannedTotal;
+        const correctChangeTarget = customerCashGiven - scannedTotal;
+
+        // Logika Evaluasi Akurasi Kasir Profesional
+        if (playerInputCash === correctChangeTarget) {
+          // Berhasil Sempurna
+          score += scannedTotal; // Keuntungan bersih masuk toko
+          customerCounter++;
+          alert(`Transaksi Sukses! Kembalian tepat senilai Rp ${exactChangeNeeded.toLocaleString("id-ID")}. +Skor`);
+          generateCustomer();
+          updateHUD();
+        } else {
+          // Salah Hitung Uang Toko atau Kurang Kasih Kembalian
+          alert(
+            `Transaksi Gagal / Salah! Kembalian yang kamu hitung: Rp ${exactChangeNeeded.toLocaleString("id-ID")}.\nSeharusnya kembalian yang benar: Rp ${correctChangeTarget.toLocaleString("id-ID")}.\n(Uang Pelanggan: Rp ${customerCashGiven.toLocaleString("id-ID")} - Total: Rp ${scannedTotal.toLocaleString("id-ID")})`,
+          );
+          // Penalti Pengurangan Waktu akibat kecerobohan
+          timeLeft = Math.max(0, timeLeft - 10);
+          document.getElementById("timer-val").innerText = timeLeft + "s";
+        }
+      }
+
+      function updateHUD() {
+        document.getElementById("score-val").innerText = `Rp ${score.toLocaleString("id-ID")}`;
+        document.getElementById("customer-count").innerText = customerCounter;
+      }
+
+      function resetGame() {
+        score = 0;
+        customerCounter = 0;
+        timeLeft = 90;
+        initGame();
+      }
+
+      // Mulai aplikasi saat window terbuka
+      window.onload = initGame;
+    </script>
+  </body>
+</html>

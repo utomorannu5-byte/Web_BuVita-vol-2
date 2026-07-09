@@ -1,0 +1,335 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Nunito", sans-serif;
+  user-select: none;
+}
+
+body.halaman-game-pembeli {
+  background-color: #141414;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* CONTAINER UTAMA DUAL KOLOM DESKTOP */
+.buyer-container {
+  width: 100%;
+  max-width: 1020px;
+  height: 80vh;
+  max-height: 640px;
+  min-height: 520px;
+
+  display: grid;
+  grid-template-columns: 40% 60%; /* Kiri 40% untuk catatan, Kanan 60% untuk rak */
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "top-bar top-bar"
+    "kiri kanan";
+
+  background: #ffffff;
+  border-radius: 24px;
+  border: 6px solid #ffb300; /* Tema warna kuning khas pembeli ceria */
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.buyer-top-bar {
+  grid-area: top-bar;
+  background: #fff8e1;
+  color: #b76e00;
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 20px;
+  font-weight: bold;
+  font-size: 18px;
+  border-bottom: 4px solid #ffe082;
+}
+
+/* PANEL KIRI (Catatan Belanja & Keranjang) */
+.left-panel {
+  grid-area: kiri;
+  background: #fcf8f2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-right: 4px dashed #ffe082;
+}
+
+.notepad {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 3px 3px 0px #ffe082;
+}
+
+.status-badge {
+  background: #ff1744;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  float: right;
+}
+
+.cart-basket {
+  background: #eeeeee;
+  border-radius: 12px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #757575;
+  font-weight: bold;
+}
+
+/* PANEL KANAN (Rak Minimarket) */
+.right-panel {
+  grid-area: kanan;
+  background: #f5f5f5;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.market-shelf {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  flex: 1;
+  margin-top: 15px;
+}
+
+.shelf-item {
+  background: #ffffff;
+  border: 3px solid #cfd8dc;
+  border-radius: 16px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.shelf-item:hover {
+  transform: scale(1.05);
+  border-color: #ffb300;
+}
+
+.item-price {
+  background: #ffb300;
+  color: black;
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 3px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.shelf-img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.item-name {
+  font-size: 13px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.buyer-instruction {
+  background: #212121;
+  color: white;
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 10px;
+}
+/* ==========================================================================
+   FITTING DESAIN FASE KASIR & LEMBARAN UANG INTERAKTIF
+   ========================================================================== */
+
+/* Nampan Kasir Tempat Menaruh Uang */
+.cashier-tray {
+  background: #e0f2f1;
+  border: 3px dashed #009688;
+  border-radius: 12px;
+  padding: 15px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #004d40;
+  margin-bottom: 15px;
+}
+
+/* Kotak Dompet */
+.wallet-inside {
+  background: #efebe9;
+  border: 3px solid #8d6e63;
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.money-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* Gaya Tombol Uang Kertas Realistis (Warna disesuaikan Uang Rupiah Asli) */
+.money-bill {
+  font-size: 16px;
+  font-weight: 900;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s;
+}
+
+.money-bill:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* Pewarnaan Uang Standard Bank Indonesia */
+.bill-2k {
+  background: #b0bec5 !important;
+  color: #263238 !important;
+} /* Abu-abu */
+.bill-5k {
+  background: #bcaaa4 !important;
+  color: #4e342e !important;
+} /* Cokelat/Hijau pudar */
+.bill-10k {
+  background: #ba68c8 !important;
+} /* Ungu */
+.bill-20k {
+  background: #81c784 !important;
+} /* Hijau */
+
+/* Tombol Kontrol Akhir */
+#btn-reset-wallet {
+  background: #ff5252;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  flex: 1;
+}
+
+#btn-confirm-pay {
+  background: #00e676;
+  color: black;
+  font-weight: 900;
+  font-size: 16px;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  flex: 1.5;
+  box-shadow: 0 4px 0 #00c853;
+}
+/* ==========================================================================
+   PERMANIS UI: POPUP KUSTOM & IMAGE UANG PNG
+   ========================================================================== */
+
+/* Gaya Overlay Melayang */
+.custom-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+/* Kotak Pesan Pop-up */
+.custom-popup-box {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 24px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  border: 6px solid #ffb300;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.custom-popup-box h2 {
+  font-family: "Fredoka One", cursive;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+.custom-popup-box p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.btn-popup-primary {
+  background: #ffb300;
+  color: black;
+  font-weight: 900;
+  font-size: 18px;
+  border: none;
+  padding: 14px 35px;
+  border-radius: 14px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #b76e00;
+}
+
+.btn-popup-primary:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 #b76e00;
+}
+
+/* Pengaturan Khusus Gambar Uang PNG */
+.bill-wrapper {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.1s;
+}
+
+.bill-wrapper:hover {
+  transform: scale(1.03);
+}
+
+.img-money-bill {
+  width: 100%;
+  height: auto;
+  display: block;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

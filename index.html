@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuVita EduPlay - Beranda</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="logo-area">
+        <img src="assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-item active">HOME</a>
+        <a href="games.html" class="nav-item">GAMES</a>
+        <a href="kategori.html" class="nav-item">KATEGORI</a>
+        <a href="aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+      <div class="header-actions">
+        <button class="action-btn">🔍</button>
+        <button class="action-btn">🌐</button>
+      </div>
+    </header>
+
+    <main class="hero-section">
+      <div class="dot-matrix-overlay"></div>
+
+      <div class="hero-content">
+        <h1 class="hero-title">BuVita <span class="highlight-yellow">EduPlay</span></h1>
+        <div class="hero-divider"></div>
+
+        <h2 class="hero-subtitle">⚡ Belajar Jadi Lebih Menyenangkan untuk Semua Anak ⚡</h2>
+        <p class="hero-description">
+          BuVita EduPlay menghadirkan media pembelajaran interaktif berbasis permainan yang dirancang untuk membantu siswa belajar dengan cara yang menyenangkan, sederhana, dan ramah bagi anak berkebutuhan khusus.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="games.html" class="btn btn-primary">Mulai Belajar</a>
+          <a href="aboutUs.html" class="btn btn-secondary">Temukan Kami</a>
+        </div>
+      </div>
+
+      <div class="hero__illustration">
+        <img src="assets/BuVita_sapa.png" class="hero__image" />
+
+        <span class="floating floating--coin"> ⭐ </span>
+
+        <span class="floating floating--star"> ⭐ </span>
+
+        <span class="floating floating--book"> ⭐ </span>
+      </div>
+    </main>
+
+    <section id="kategori-section" class="catalog-section">
+      <h2 class="catalog-title">🎯 Pilih Bidang Studimu</h2>
+      <p class="catalog-subtitle">Ayo pilih petualangan ilmu yang ingin kamu jelajahi hari ini!</p>
+
+      <div class="subject-filter-container">
+        <button class="filter-card active" onclick="switchSubject('matematika', this)">
+          <div class="filter-icon bg-yellow">🔢</div>
+          <h3>Matematika</h3>
+        </button>
+        <button class="filter-card" onclick="switchSubject('bahasa', this)">
+          <div class="filter-icon bg-pink">🔤</div>
+          <h3>Bahasa</h3>
+        </button>
+        <button class="filter-card" onclick="switchSubject('umum', this)">
+          <div class="filter-icon bg-purple">🗺️</div>
+          <h3>Pengetahuan Umum</h3>
+        </button>
+        <button class="filter-card" onclick="switchSubject('ipa', this)">
+          <div class="filter-icon bg-red">🧪</div>
+          <h3>IPA</h3>
+        </button>
+        <button class="filter-card" onclick="switchSubject('seni', this)">
+          <div class="filter-icon bg-blue">🎨</div>
+          <h3>Seni Budaya</h3>
+        </button>
+      </div>
+
+      <div id="gamesDisplayArea" class="games-grid-layout"></div>
+    </section>
+
+    <section class="info-stripe">
+      <section class="game-collection-section">
+        <div class="section-title-container">
+          <div class="title-decor-line"></div>
+          <h2 class="section-title">KOLEKSI EDUGAME FAVORIT</h2>
+        </div>
+
+        <div class="game-grid">
+          <div class="game-card">
+            <div class="game-card-header">
+              <div class="game-icon-circle icon-yellow">
+                <img src="assets/icon_rupiah.png" class="game-icon" alt="Icon Rupiah" />
+              </div>
+            </div>
+            <div class="game-card-body">
+              <h3>Mengenal Uang Rupiah</h3>
+              <span class="game-badge badge-matematika">Matematika</span>
+              <a href="mata-pelajaran/matematika/tema-mengenal-uang-dasar/MengenalUang-Suara.html" class="btn btn-sm btn-primary">Play Game</a>
+            </div>
+          </div>
+
+          <div class="game-card">
+            <div class="game-card-header">
+              <div class="game-icon-circle icon-pink">
+                <img src="assets/icon_huruf.png" class="game-icon" alt="Icon Huruf" />
+              </div>
+            </div>
+            <div class="game-card-body">
+              <h3>Mengenal Huruf</h3>
+              <span class="game-badge badge-bahasaIndonesia">Bahasa Indonesia</span>
+            </div>
+          </div>
+
+          <div class="game-card">
+            <div class="game-card-header">
+              <div class="game-icon-circle">
+                <img src="assets/icon_benda_langit.png" class="game-icon" alt="Icon Benda Langit" />
+              </div>
+            </div>
+            <div class="game-card-body">
+              <h3>Mengenal Benda Langit</h3>
+              <span class="game-badge badge-pengetahuanAlam">Pengetahuan Alam</span>
+            </div>
+          </div>
+
+          <div class="game-card">
+            <div class="game-card-header">
+              <div class="game-icon-circle icon-gray">
+                <img src="assets/icon_benda_langit.png" class="game-icon" alt="Icon Benda Langit" />
+              </div>
+            </div>
+            <div class="game-card-body">
+              <h3>Mengenal Pulau Indonesia</h3>
+              <span class="game-badge badge-pengetahuanUmum">Pengetahuan Umum</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="info-stripe-content">
+        <h3>Perjalanan Belajar yang Menyenangkan!</h3>
+        <p>Setiap game kami dirancang dengan prinsip inklusivitas, memastikan semua anak dapat menikmati dan belajar dari setiap petualangan digital.</p>
+      </div>
+    </section>
+
+    <footer class="main-footer">
+      <div class="footer-content">
+        <div class="footer-logo">BuVita <span class="text-yellow">EduPlay</span></div>
+        <p class="footer-text">Media pembelajaran game interaktif dan inklusif untuk anak berkebutuhan khusus.</p>
+        <div class="footer-divider"></div>
+        <p class="footer-copyright">© 2026 BuVita EduPlay. Made with 💛 for Special Education.</p>
+      </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/catalog.js"></script>
+  </body>
+</html>

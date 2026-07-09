@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matematika Lanjutan: Supermarket BuVita - Hitung Kembalian</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <style>
+      /*
+        Semua class di bawah ini diberi prefix "kc-" (Kasir Cilik)
+        supaya tidak bentrok dengan class umum di style.css situs
+        (mis. .pill, .btn, .card, dsb). Warna & tipografi memakai
+        token lokal (--kc-*) juga, tidak menimpa variable global.
+      */
+      .kc-wrap {
+        --kc-paper: #fff8ec;
+        --kc-paper-shade: #f4ecd8;
+        --kc-ink: #2b2118;
+        --kc-ink-soft: #6f6152;
+        --kc-clay: #c1440e;
+        --kc-clay-dark: #9c360a;
+        --kc-rupiah: #1f7a5c;
+        --kc-gold: #e8a93b;
+        --kc-danger: #c0392b;
+        --kc-surface: #ffffff;
+        --kc-line: #e3d7bf;
+
+        width: 100%;
+        max-width: 920px;
+        margin: 24px auto 10px;
+        padding: 0 16px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: var(--kc-ink);
+        box-sizing: border-box;
+      }
+      .kc-wrap * {
+        box-sizing: border-box;
+      }
+      .kc-wrap button {
+        font-family: inherit;
+      }
+      .kc-wrap button:focus-visible,
+      .kc-wrap [tabindex]:focus-visible {
+        outline: 3px solid var(--kc-rupiah);
+        outline-offset: 2px;
+      }
+
+      /* ---------- Topbar dalam game ---------- */
+      .kc-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .kc-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .kc-brand-mark {
+        font-size: 2.1rem;
+        filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.15));
+      }
+      .kc-brand-text {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+      }
+      .kc-brand-text strong {
+        font-family: "Baloo 2", sans-serif;
+        font-size: 1.5rem;
+        color: var(--kc-clay-dark);
+      }
+      .kc-brand-text span {
+        font-size: 0.85rem;
+        color: var(--kc-ink-soft);
+        font-weight: 600;
+      }
+      .kc-stat-pills {
+        display: flex;
+        gap: 8px;
+      }
+      .kc-pill {
+        background: var(--kc-surface);
+        border: 2px solid var(--kc-ink);
+        border-radius: 999px;
+        padding: 6px 14px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        box-shadow: 2px 2px 0 var(--kc-ink);
+      }
+      .kc-pill b {
+        font-family: "JetBrains Mono", monospace;
+      }
+      .kc-pill.kc-streak {
+        background: var(--kc-gold);
+      }
+
+      /* ---------- Layout ---------- */
+      .kc-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+      @media (max-width: 720px) {
+        .kc-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ---------- Receipt ---------- */
+      .kc-receipt {
+        position: relative;
+        background: var(--kc-surface);
+        border: 2px solid var(--kc-ink);
+        border-radius: 6px 6px 0 0;
+        padding: 22px 22px 34px;
+        box-shadow: 6px 6px 0 var(--kc-ink);
+      }
+      .kc-receipt::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -12px;
+        height: 14px;
+        background-image: linear-gradient(-45deg, var(--kc-paper) 6px, transparent 0), linear-gradient(45deg, var(--kc-paper) 6px, transparent 0);
+        background-size: 16px 16px;
+        background-position: bottom;
+        background-repeat: repeat-x;
+      }
+      .kc-receipt-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-family: "Baloo 2", sans-serif;
+        margin-bottom: 14px;
+      }
+      .kc-store-name {
+        font-size: 1.15rem;
+        letter-spacing: 0.03em;
+      }
+      .kc-receipt-date {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--kc-ink-soft);
+      }
+      .kc-customer-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--kc-paper);
+        border: 2px solid var(--kc-line);
+        border-radius: 12px;
+        padding: 10px 12px;
+        margin-bottom: 14px;
+      }
+      .kc-avatar {
+        font-size: 2.4rem;
+        line-height: 1;
+      }
+      .kc-customer-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--kc-ink-soft);
+        font-weight: 700;
+      }
+      .kc-customer-name {
+        font-family: "Baloo 2", sans-serif;
+        font-size: 1.15rem;
+      }
+      .kc-ledger-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        font-size: 0.98rem;
+      }
+      .kc-ledger-row span {
+        color: var(--kc-ink-soft);
+        font-weight: 600;
+      }
+      .kc-ledger-row b {
+        font-family: "JetBrains Mono", monospace;
+      }
+      .kc-divider-dashed {
+        border-top: 2px dashed var(--kc-line);
+        margin: 8px 0;
+      }
+      .kc-ledger-row.kc-highlight {
+        background: #fbf1da;
+        border: 2px solid var(--kc-gold);
+        border-radius: 10px;
+        padding: 10px 12px;
+        margin-top: 6px;
+      }
+      .kc-ledger-row.kc-highlight b {
+        font-size: 1.1rem;
+        color: var(--kc-clay-dark);
+      }
+      .kc-hint-btn {
+        margin-top: 14px;
+        background: none;
+        border: 2px solid var(--kc-ink);
+        border-radius: 999px;
+        padding: 6px 14px;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        color: var(--kc-ink);
+      }
+      .kc-hint-btn:active {
+        transform: translate(1px, 1px);
+      }
+      .kc-hint-text {
+        min-height: 1.2em;
+        font-size: 0.85rem;
+        color: var(--kc-rupiah);
+        font-weight: 700;
+        margin: 8px 0 0;
+      }
+
+      .kc-stamp {
+        position: absolute;
+        top: 40%;
+        right: 18px;
+        font-family: "Baloo 2", sans-serif;
+        font-weight: 800;
+        font-size: 1.7rem;
+        letter-spacing: 0.06em;
+        border: 5px solid currentColor;
+        border-radius: 12px;
+        padding: 6px 14px;
+        transform: rotate(-14deg) scale(0);
+        opacity: 0;
+        pointer-events: none;
+      }
+      .kc-stamp.kc-show {
+        animation: kc-stampIn 0.35s ease-out forwards;
+      }
+      .kc-stamp.kc-ok {
+        color: var(--kc-rupiah);
+      }
+      .kc-stamp.kc-fail {
+        color: var(--kc-danger);
+      }
+      @keyframes kc-stampIn {
+        0% {
+          transform: rotate(-14deg) scale(2.2);
+          opacity: 0;
+        }
+        70% {
+          transform: rotate(-14deg) scale(0.92);
+          opacity: 1;
+        }
+        100% {
+          transform: rotate(-14deg) scale(1);
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .kc-stamp.kc-show {
+          animation: none;
+          transform: rotate(-14deg) scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* ---------- Workbench ---------- */
+      .kc-workbench {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .kc-table-zone {
+        background: var(--kc-surface);
+        border: 2px dashed var(--kc-clay);
+        border-radius: 16px;
+        min-height: 120px;
+        padding: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .kc-placeholder {
+        color: var(--kc-ink-soft);
+        font-size: 0.85rem;
+        text-align: center;
+        margin: 0;
+        max-width: 320px;
+      }
+      .kc-bill {
+        border: 2px solid rgba(43, 33, 24, 0.25);
+        cursor: pointer;
+        border-radius: 10px;
+        background: #ffffff;
+        padding: 6px 6px 8px;
+        min-width: 84px;
+        text-align: center;
+        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+        position: relative;
+        animation: kc-pop 0.2s ease-out;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .kc-bill img {
+        width: 100%;
+        display: block;
+        border-radius: 6px;
+        pointer-events: none;
+      }
+      .kc-bill small {
+        display: block;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--kc-ink);
+        opacity: 0.85;
+      }
+      /* Uang di meja kembalian dibuat lebih kecil daripada di laci,
+         supaya beberapa lembar sekaligus tetap muat rapi. */
+      .kc-bill.kc-on-table {
+        min-width: 56px;
+        padding: 4px 4px 6px;
+      }
+      .kc-bill.kc-on-table small {
+        font-size: 0.58rem;
+      }
+      .kc-bill.kc-on-table::before {
+        content: "✕";
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        background: var(--kc-ink);
+        color: white;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        font-size: 0.65rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      @keyframes kc-pop {
+        from {
+          transform: scale(0.4);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+
+      .kc-drawer {
+        background: var(--kc-paper-shade);
+        border: 2px solid var(--kc-ink);
+        border-radius: 16px;
+        padding: 14px;
+        box-shadow: 4px 4px 0 var(--kc-ink);
+      }
+      .kc-drawer-title {
+        font-family: "Baloo 2", sans-serif;
+        margin: 0 0 10px;
+        font-size: 1rem;
+      }
+      .kc-drawer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(76px, 1fr));
+        gap: 8px;
+      }
+
+      .kc-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .kc-btn {
+        flex: 1;
+        font-family: "Baloo 2", sans-serif;
+        font-size: 1.02rem;
+        padding: 12px;
+        border-radius: 12px;
+        border: 2px solid var(--kc-ink);
+        cursor: pointer;
+        box-shadow: 3px 3px 0 var(--kc-ink);
+      }
+      .kc-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--kc-ink);
+      }
+      .kc-btn-ghost {
+        background: var(--kc-surface);
+        color: var(--kc-ink);
+      }
+      .kc-btn-primary {
+        background: var(--kc-rupiah);
+        color: white;
+      }
+      .kc-feedback {
+        min-height: 3.4em;
+        background: var(--kc-surface);
+        border: 2px solid var(--kc-line);
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-size: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        justify-content: center;
+      }
+      .kc-feedback:empty {
+        display: none;
+      }
+      .kc-feedback .kc-btn {
+        align-self: flex-start;
+        flex: none;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+      }
+      .kc-feedback.kc-ok {
+        border-color: var(--kc-rupiah);
+      }
+      .kc-feedback.kc-fail {
+        border-color: var(--kc-danger);
+      }
+
+      /* ---------- Popup instruksi awal ---------- */
+      .kc-popup-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(30, 22, 12, 0.72);
+        backdrop-filter: blur(3px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 16px;
+      }
+      .kc-popup-overlay[hidden] {
+        display: none;
+      }
+      .kc-popup-box {
+        background: var(--kc-paper, #fff8ec);
+        border: 3px solid #2b2118;
+        border-radius: 20px;
+        max-width: 460px;
+        width: 100%;
+        padding: 26px 26px 22px;
+        box-shadow: 8px 8px 0 #2b2118;
+        max-height: 88vh;
+        overflow-y: auto;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        color: #2b2118;
+      }
+      .kc-popup-title {
+        font-family: "Baloo 2", sans-serif;
+        font-size: 1.5rem;
+        color: #9c360a;
+        margin: 0 0 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .kc-popup-sub {
+        color: #6f6152;
+        font-size: 0.88rem;
+        margin: 0 0 16px;
+        font-weight: 600;
+      }
+      .kc-steps {
+        list-style: none;
+        margin: 0 0 18px;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .kc-steps li {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        background: #ffffff;
+        border: 2px solid #e3d7bf;
+        border-radius: 12px;
+        padding: 8px 10px;
+        font-size: 0.9rem;
+      }
+      .kc-steps .kc-step-num {
+        font-family: "Baloo 2", sans-serif;
+        background: #e8a93b;
+        border: 2px solid #2b2118;
+        border-radius: 50%;
+        min-width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+      }
+      .kc-popup-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .kc-popup-actions button {
+        flex: 1 1 150px;
+        font-family: "Baloo 2", sans-serif;
+        font-size: 1.02rem;
+        padding: 12px;
+        border-radius: 12px;
+        border: 2px solid #2b2118;
+        cursor: pointer;
+        box-shadow: 3px 3px 0 #2b2118;
+      }
+      .kc-popup-actions button:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 #2b2118;
+      }
+      .kc-audio-btn {
+        background: #ffffff;
+        color: #2b2118;
+      }
+      .kc-audio-btn.kc-speaking {
+        background: #e8a93b;
+      }
+      .kc-start-btn {
+        background: #1f7a5c;
+        color: white;
+      }
+      .kc-audio-note {
+        font-size: 0.72rem;
+        color: #6f6152;
+        margin: 8px 0 0;
+      }
+
+      @media (max-width: 550px) {
+        .kc-wrap {
+          padding: 0 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+    </header>
+
+    <div class="kc-wrap">
+      <header class="kc-topbar">
+        <div class="kc-brand">
+          <span class="kc-brand-mark">🧾</span>
+          <div class="kc-brand-text">
+            <strong>Kasir Cilik</strong>
+            <span>Latihan hitung uang kembalian</span>
+          </div>
+        </div>
+        <div class="kc-stat-pills">
+          <div class="kc-pill">Level <b id="pillLevel">1</b></div>
+          <div class="kc-pill">Skor <b id="pillScore">0</b></div>
+          <div class="kc-pill kc-streak">🔥 <b id="pillStreak">0</b></div>
+        </div>
+      </header>
+
+      <main class="kc-layout">
+        <section class="kc-receipt" aria-label="Struk transaksi">
+          <div class="kc-receipt-head">
+            <span class="kc-store-name">TOKO BUVITA</span>
+            <span class="kc-receipt-date" id="receiptDate"></span>
+          </div>
+
+          <div class="kc-customer-row">
+            <div class="kc-avatar" id="emojiHewan">🐱</div>
+            <div>
+              <div class="kc-customer-label">Pelanggan</div>
+              <div class="kc-customer-name" id="namaHewan">…</div>
+            </div>
+          </div>
+
+          <div class="kc-ledger-row"><span>Total belanja</span><b id="hargaBarang">Rp0</b></div>
+          <div class="kc-ledger-row"><span>Uang dibayar</span><b id="uangDibayar">Rp0</b></div>
+          <div class="kc-divider-dashed"></div>
+          <div class="kc-ledger-row kc-highlight">
+            <span>Kembalian di meja</span>
+            <b id="totalKembalianUser">Rp0</b>
+          </div>
+
+          <button class="kc-hint-btn" id="hintBtn" type="button">🔍 Cek sementara</button>
+          <p class="kc-hint-text" id="hintText" aria-live="polite"></p>
+
+          <div class="kc-stamp" id="stamp" aria-hidden="true"></div>
+        </section>
+
+        <section class="kc-workbench" aria-label="Area kerja kasir">
+          <div class="kc-table-zone" id="mejaKembalian">
+            <p class="kc-placeholder" id="placeholderMeja">Klik uang di laci untuk taruh di meja. Klik uangnya lagi kalau mau membatalkan.</p>
+          </div>
+
+          <div class="kc-drawer">
+            <p class="kc-drawer-title">🗄️ Laci Kasir</p>
+            <div class="kc-drawer-grid" id="drawerGrid"></div>
+          </div>
+
+          <div class="kc-actions">
+            <button class="kc-btn kc-btn-ghost" id="btnClear" type="button">Bersihkan Meja</button>
+            <button class="kc-btn kc-btn-primary" id="btnSubmit" type="button">Berikan Kembalian ✅</button>
+          </div>
+
+          <div class="kc-feedback" id="feedback" role="status" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="navigasi-box" style="display: flex; justify-content: space-between; width: 100%; max-width: 920px; margin: 30px auto; gap: 15px; padding: 0 16px; box-sizing: border-box">
+      <button
+        class="btn-nav back"
+        style="
+          flex: 1;
+          padding: 15px;
+          font-family: &quot;Fredoka One&quot;, sans-serif;
+          border: 3px solid black;
+          border-radius: 12px;
+          cursor: pointer;
+          color: black;
+          background-color: #7f8c8d;
+          box-shadow: 3px 3px 0px black;
+          font-size: 1.1rem;
+        "
+        onclick="window.location.href = '../menengah/TebakDompet.html'"
+      >
+        ⬅️ KELUAR KE KATALOG
+      </button>
+      <button
+        class="btn-nav next"
+        style="
+          flex: 1;
+          padding: 15px;
+          font-family: &quot;Fredoka One&quot;, sans-serif;
+          border: 3px solid black;
+          border-radius: 12px;
+          cursor: pointer;
+          color: white;
+          background-color: #9b59b6;
+          box-shadow: 3px 3px 0px black;
+          font-size: 1.1rem;
+        "
+        onclick="alert('Hebat! Kamu telah membuka game pertama Level Lanjutan. Nantikan game berikutnya ya!')"
+      >
+        GAME BERIKUTNYA ➡️
+      </button>
+    </div>
+
+    <!-- ---------- Popup instruksi awal ---------- -->
+    <div class="kc-popup-overlay" id="introOverlay">
+      <div class="kc-popup-box" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+        <h2 class="kc-popup-title" id="introTitle">🧾 Cara Bermain</h2>
+        <p class="kc-popup-sub">Yuk jadi kasir cilik yang jago menghitung kembalian!</p>
+
+        <ol class="kc-steps">
+          <li>
+            <span class="kc-step-num">1</span><span>Lihat struk: <strong>Total Belanja</strong> dan <strong>Uang Dibayar</strong> oleh pelanggan.</span>
+          </li>
+          <li><span class="kc-step-num">2</span><span>Hitung kembaliannya di kepala: Uang Dibayar dikurangi Total Belanja.</span></li>
+          <li>
+            <span class="kc-step-num">3</span><span>Klik uang di <strong>Laci Kasir</strong> untuk menaruhnya ke meja kembalian.</span>
+          </li>
+          <li><span class="kc-step-num">4</span><span>Salah taruh? Klik lagi uang yang ada di meja untuk membatalkannya.</span></li>
+          <li>
+            <span class="kc-step-num">5</span><span>Kalau sudah yakin, tekan tombol <strong>"Berikan Kembalian ✅"</strong>.</span>
+          </li>
+          <li><span class="kc-step-num">6</span><span>Jawab benar 3 kali berturut-turut untuk naik level dan dapat skor lebih besar!</span></li>
+        </ol>
+
+        <div class="kc-popup-actions">
+          <button class="kc-audio-btn" id="btnAudio" type="button">🔊 Dengarkan Instruksi</button>
+          <button class="kc-start-btn" id="btnStart" type="button">Mulai Bermain 🛒</button>
+        </div>
+        <p class="kc-audio-note" id="audioNote"></p>
+      </div>
+    </div>
+
+    <script>
+      // ---------- Data dasar ----------
+      // Ganti path di bawah ini kalau lokasi asset PNG kamu berbeda.
+      // Ikut konvensi file aslimu: folder "assets" satu level di atas folder game.
+      const masterGambarUang = {
+        1000: "../assets/uang1000.png",
+        2000: "../assets/uang2000.png",
+        5000: "../assets/uang5000.png",
+        10000: "../assets/uang10000.png",
+        20000: "../assets/uang20000.png",
+        // Tambahkan baris ini kalau kamu juga punya asset pecahan besar:
+        // 50000: "../assets/uang50000.png",
+        // 100000: "../assets/uang100000.png",
+      };
+
+      const DENOMS = Object.keys(masterGambarUang).map((v) => ({ value: Number(v), img: masterGambarUang[v] }));
+
+      const ANIMALS = [
+        { emoji: "🦊", nama: "Rubah" },
+        { emoji: "🐼", nama: "Panda" },
+        { emoji: "🐸", nama: "Katak" },
+        { emoji: "🐵", nama: "Monyet" },
+        { emoji: "🐱", nama: "Kucing" },
+        { emoji: "🐰", nama: "Kelinci" },
+        { emoji: "🦁", nama: "Singa" },
+      ];
+
+      const LEVEL_TIERS = [
+        { min: 1000, max: 9000 },
+        { min: 5000, max: 22000 },
+        { min: 10000, max: 38000 },
+        { min: 20000, max: 65000 },
+        { min: 30000, max: 95000 },
+      ];
+
+      const rupiah = (n) => "Rp" + n.toLocaleString("id-ID");
+
+      const state = { level: 1, score: 0, streak: 0, target: 0, bills: [] };
+
+      const el = {
+        level: document.getElementById("pillLevel"),
+        score: document.getElementById("pillScore"),
+        streak: document.getElementById("pillStreak"),
+        date: document.getElementById("receiptDate"),
+        emoji: document.getElementById("emojiHewan"),
+        nama: document.getElementById("namaHewan"),
+        harga: document.getElementById("hargaBarang"),
+        bayar: document.getElementById("uangDibayar"),
+        totalMeja: document.getElementById("totalKembalianUser"),
+        meja: document.getElementById("mejaKembalian"),
+        placeholder: document.getElementById("placeholderMeja"),
+        drawerGrid: document.getElementById("drawerGrid"),
+        stamp: document.getElementById("stamp"),
+        hintBtn: document.getElementById("hintBtn"),
+        hintText: document.getElementById("hintText"),
+        feedback: document.getElementById("feedback"),
+      };
+
+      DENOMS.forEach((d) => {
+        const btn = document.createElement("button");
+        btn.className = "kc-bill";
+        btn.innerHTML = `<img src="${d.img}" alt="Uang ${rupiah(d.value)}"><small>${rupiah(d.value)} · ambil</small>`;
+        btn.setAttribute("aria-label", `Ambil uang ${rupiah(d.value)} dari laci`);
+        btn.addEventListener("click", () => addBill(d.value));
+        el.drawerGrid.appendChild(btn);
+      });
+
+      function generateScenario(level) {
+        const tier = LEVEL_TIERS[Math.min(level - 1, LEVEL_TIERS.length - 1)];
+        const steps = Math.floor((tier.max - tier.min) / 1000);
+        const harga = tier.min + Math.floor(Math.random() * (steps + 1)) * 1000;
+
+        const opsiBayar = DENOMS.map((d) => d.value).filter((v) => v > harga);
+        const jangkauan = level < 3 ? 1 : 3;
+        const idx = Math.min(opsiBayar.length - 1, Math.floor(Math.random() * jangkauan));
+        const bayar = opsiBayar[idx];
+
+        return { harga, bayar, kembalian: bayar - harga };
+      }
+
+      function nextRound() {
+        const hewan = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+        el.emoji.textContent = hewan.emoji;
+        el.nama.textContent = hewan.nama;
+
+        const s = generateScenario(state.level);
+        state.target = s.kembalian;
+        el.harga.textContent = rupiah(s.harga);
+        el.bayar.textContent = rupiah(s.bayar);
+        el.date.textContent = new Date().toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+
+        clearTable();
+        el.hintText.textContent = "";
+        el.feedback.className = "kc-feedback";
+        el.feedback.innerHTML = "";
+        el.stamp.className = "kc-stamp";
+        el.stamp.textContent = "";
+      }
+
+      function addBill(value) {
+        state.bills.push(value);
+        render();
+      }
+      function removeBillAt(index) {
+        state.bills.splice(index, 1);
+        render();
+      }
+      function clearTable() {
+        state.bills = [];
+        render();
+      }
+
+      function render() {
+        el.meja.innerHTML = "";
+        if (state.bills.length === 0) {
+          el.meja.appendChild(el.placeholder);
+        } else {
+          state.bills.forEach((value, index) => {
+            const denom = DENOMS.find((d) => d.value === value);
+            const btn = document.createElement("button");
+            btn.className = "kc-bill kc-on-table";
+            btn.innerHTML = `<img src="${denom.img}" alt="Uang ${rupiah(value)}"><small>${rupiah(value)} · batalkan</small>`;
+            btn.setAttribute("aria-label", `Uang ${rupiah(value)} di meja, klik untuk membatalkan`);
+            btn.addEventListener("click", () => removeBillAt(index));
+            el.meja.appendChild(btn);
+          });
+        }
+        const total = state.bills.reduce((a, b) => a + b, 0);
+        el.totalMeja.textContent = rupiah(total);
+      }
+
+      el.hintBtn.addEventListener("click", () => {
+        const total = state.bills.reduce((a, b) => a + b, 0);
+        let msg;
+        if (state.bills.length === 0) msg = "Meja masih kosong, coba taruh uang dulu ya!";
+        else if (total < state.target) msg = "Uangmu masih kurang, tambah lagi ya! 📈";
+        else if (total > state.target) msg = "Uangmu kelebihan nih, coba kurangi salah satu lembar. 📉";
+        else msg = "Sepertinya sudah pas! Coba tekan tombol kembalian. ✨";
+        el.hintText.textContent = msg;
+      });
+
+      document.getElementById("btnClear").addEventListener("click", clearTable);
+      document.getElementById("btnSubmit").addEventListener("click", submit);
+
+      function submit() {
+        const total = state.bills.reduce((a, b) => a + b, 0);
+        const benar = total === state.target;
+
+        if (benar) {
+          state.score += 10 * state.level;
+          state.streak += 1;
+          if (state.streak % 3 === 0 && state.level < LEVEL_TIERS.length) state.level += 1;
+        } else {
+          state.streak = 0;
+        }
+        el.level.textContent = state.level;
+        el.score.textContent = state.score;
+        el.streak.textContent = state.streak;
+
+        el.stamp.className = "kc-stamp kc-show " + (benar ? "kc-ok" : "kc-fail");
+        el.stamp.textContent = benar ? "LUNAS" : "BELUM PAS";
+
+        el.feedback.className = "kc-feedback " + (benar ? "kc-ok" : "kc-fail");
+        if (benar) {
+          el.feedback.innerHTML = `<span>🎉 Tepat sekali! Kembalian ${rupiah(state.target)} sudah pas.</span>`;
+          const btn = document.createElement("button");
+          btn.className = "kc-btn kc-btn-primary";
+          btn.type = "button";
+          btn.textContent = "Transaksi Berikutnya ➡️";
+          btn.addEventListener("click", nextRound);
+          el.feedback.appendChild(btn);
+        } else {
+          el.feedback.innerHTML = `<span>❌ Kamu memberi ${rupiah(total)}, seharusnya ${rupiah(state.target)}. Coba sesuaikan lembarannya.</span>`;
+          const btn = document.createElement("button");
+          btn.className = "kc-btn kc-btn-ghost";
+          btn.type = "button";
+          btn.textContent = "Coba Lagi 🔄";
+          btn.addEventListener("click", () => {
+            el.feedback.className = "kc-feedback";
+            el.feedback.innerHTML = "";
+            el.stamp.className = "kc-stamp";
+          });
+          el.feedback.appendChild(btn);
+        }
+      }
+
+      // ---------- Popup instruksi + audio (file audio milik sendiri) ----------
+      const introOverlay = document.getElementById("introOverlay");
+      const btnAudio = document.getElementById("btnAudio");
+      const btnStart = document.getElementById("btnStart");
+      const audioNote = document.getElementById("audioNote");
+
+      // 🔧 GANTI path ini sesuai lokasi & nama file audio instruksi kamu.
+      const audioInstruksi = new Audio("../assets/audio/instruksi-kasir-cilik.mp3");
+      let sedangPutar = false;
+
+      function playSuara() {
+        if (sedangPutar) {
+          audioInstruksi.pause();
+          audioInstruksi.currentTime = 0;
+          sedangPutar = false;
+          btnAudio.textContent = "🔊 Dengarkan Instruksi";
+          btnAudio.classList.remove("kc-speaking");
+          return;
+        }
+        audioInstruksi.currentTime = 0;
+        audioInstruksi
+          .play()
+          .then(() => {
+            sedangPutar = true;
+            btnAudio.textContent = "⏹️ Berhenti";
+            btnAudio.classList.add("kc-speaking");
+            audioNote.textContent = "";
+          })
+          .catch(() => {
+            audioNote.textContent = "Audio belum bisa diputar. Periksa nama/lokasi file audio di kode.";
+          });
+      }
+
+      audioInstruksi.addEventListener("ended", () => {
+        sedangPutar = false;
+        btnAudio.textContent = "🔊 Dengarkan Instruksi";
+        btnAudio.classList.remove("kc-speaking");
+      });
+
+      audioInstruksi.addEventListener("error", () => {
+        audioNote.textContent = "File audio tidak ditemukan. Periksa nama/lokasi file audio di kode.";
+      });
+
+      btnAudio.addEventListener("click", playSuara);
+
+      btnStart.addEventListener("click", () => {
+        audioInstruksi.pause();
+        audioInstruksi.currentTime = 0;
+        sedangPutar = false;
+        introOverlay.setAttribute("hidden", "");
+        nextRound();
+      });
+
+      // Game tidak mulai (soal belum tergenerate) sampai popup ditutup,
+      // supaya anak membaca/mendengar instruksi dulu sebelum bermain.
+    </script>
+  </body>
+</html>

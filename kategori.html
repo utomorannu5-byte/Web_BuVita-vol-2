@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BuVita EduPlay - Semua Kategori</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="logo-area">
+        <img src="assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-item">HOME</a>
+        <a href="games.html" class="nav-item">GAMES</a>
+        <a href="kategori.html" class="nav-item active">KATEGORI</a>
+        <a href="aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+      <div class="header-actions">
+        <button class="action-btn">🔍</button>
+        <button class="action-btn">🌐</button>
+      </div>
+    </header>
+
+    <section class="catalog-section catalog-section--tall">
+      <h2 class="catalog-title">🗂️ Semua Kategori & Game</h2>
+      <p class="catalog-subtitle">Jelajahi seluruh kategori pelajaran dan game yang tersedia di BuVita EduPlay, semua dalam satu halaman.</p>
+
+      <!-- Navigasi lompat cepat ke tiap kategori (bukan filter/toggle) -->
+      <nav class="category-jump-nav" aria-label="Lompat ke kategori">
+        <a href="#matematika" class="filter-card">
+          <div class="filter-icon bg-yellow">🔢</div>
+          <h3>Matematika</h3>
+        </a>
+        <a href="#bahasa" class="filter-card">
+          <div class="filter-icon bg-pink">🔤</div>
+          <h3>Bahasa</h3>
+        </a>
+        <a href="#umum" class="filter-card">
+          <div class="filter-icon bg-purple">🗺️</div>
+          <h3>Pengetahuan Umum</h3>
+        </a>
+        <a href="#ipa" class="filter-card">
+          <div class="filter-icon bg-red">🧪</div>
+          <h3>IPA</h3>
+        </a>
+        <a href="#seni" class="filter-card">
+          <div class="filter-icon bg-blue">🎨</div>
+          <h3>Seni Budaya</h3>
+        </a>
+      </nav>
+
+      <div id="allCategoriesArea"></div>
+    </section>
+
+    <footer class="main-footer">
+      <div class="footer-content">
+        <div class="footer-logo">BuVita <span class="text-yellow">EduPlay</span></div>
+        <p class="footer-text">Media pembelajaran game interaktif dan inklusif untuk anak berkebutuhan khusus.</p>
+        <div class="footer-divider"></div>
+        <p class="footer-copyright">© 2026 BuVita EduPlay. Made with 💛 for Special Education.</p>
+      </div>
+    </footer>
+
+    <script src="js/data.js"></script>
+    <script src="js/catalog.js"></script>
+    <script src="js/kategori.js"></script>
+  </body>
+</html>

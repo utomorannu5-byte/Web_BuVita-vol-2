@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matematika Basic: Tanya Uang - BuVita EduPlay</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+
+    <style>
+      body {
+        background-image: radial-gradient(#333333 15%, transparent 16%);
+        background-size: 16px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .game-container {
+        width: 100%;
+        max-width: 900px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header {
+        background-color: #caa011;
+        color: black;
+        padding: 20px;
+        border-radius: 12px;
+        border: 3px solid black;
+        box-shadow: 5px 5px 0px black;
+        text-align: center;
+        font-weight: 900;
+        margin-bottom: 30px;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      /* Kotak Pertanyaan Kuis */
+      .quiz-box {
+        background-color: #2e2e2e;
+        border: 3px solid #f1b811;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 25px;
+        width: 100%;
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: 900;
+        color: #ffffff;
+        box-shadow: 4px 4px 0px #000000;
+        display: none;
+      }
+
+      .grid-uang {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        width: 100%;
+      }
+
+      .card-uang {
+        background: #f0f0f0;
+        border: 3px solid black;
+        border-radius: 15px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        box-shadow: 4px 4px 0px black;
+      }
+
+      .card-uang:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0px black;
+      }
+
+      .card-uang img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        border: 2px solid #000;
+        margin-bottom: 10px;
+      }
+
+      .card-uang p {
+        color: black;
+        font-weight: 900;
+        font-size: 1.1rem;
+      }
+
+      .btn-quiz {
+        margin-top: 40px;
+        padding: 15px 40px;
+        background-color: #2ecc71;
+        color: white;
+        border: 3px solid black;
+        border-radius: 10px;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 5px 5px 0px black;
+        font-size: 1.1rem;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+      }
+
+      .btn-quiz:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0px black;
+      }
+
+      /* Styling Pop-up Sukses */
+      .popup-overlay-global {
+        display: none; /* Sembunyi secara default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .popup-content-box {
+        background-color: #1e1e1e;
+        border: 4px solid #2ecc71;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0px 0px 30px rgba(46, 204, 113, 0.3);
+        animation: zoomInPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .popup-icon-circle {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        animation: bouncePop 1s infinite;
+      }
+
+      .popup-title {
+        font-family: "Fredoka One", sans-serif;
+        color: #2ecc71;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      .popup-text {
+        font-family: "Nunito", sans-serif;
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        line-height: 1.4;
+      }
+
+      .popup-btn-next {
+        background-color: #f1b811;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 30px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 15px;
+        box-shadow: 5px 5px 0px black;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .popup-btn-next:hover {
+        transform: scale(1.05);
+        background-color: #ffc107;
+      }
+
+      @keyframes zoomInPop {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes bouncePop {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-15px);
+        }
+      }
+
+      /* Efek Animasi Guncang untuk Pop-up Salah */
+      @keyframes shakePop {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-10px);
+        }
+        40%,
+        80% {
+          transform: translateX(10px);
+        }
+      }
+
+      /* Styling khusus untuk tombol navigasi ke game berikutnya */
+      .btn-next-game {
+        margin-top: 20px;
+        padding: 15px 30px;
+        background-color: #e67e22;
+        color: white;
+        border: 3px solid black;
+        border-radius: 10px;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 5px 5px 0px black;
+        font-size: 1.1rem;
+        display: none; /* Sembunyi dulu, baru muncul saat jawaban benar */
+        text-decoration: none;
+        text-align: center;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+      }
+
+      .btn-next-game:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0px black;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+      <div class="header-actions">
+        <button class="action-btn">🔍</button>
+        <button class="action-btn">🌐</button>
+      </div>
+    </header>
+
+    <div class="game-container">
+      <div class="header" onclick="playIntro()">📢 Klik/Tap Tombol Quiz dan Simak Pertanyaan dari BuVita! 🌟</div>
+
+      <div class="quiz-box" id="quizBox">Coba Cari: Mana uang <span id="targetNominalText" style="color: #f1b811">-</span>?</div>
+
+      <div class="grid-uang" id="gridUang"></div>
+
+      <button class="btn-quiz" id="quizBtn" onclick="startQuiz()">📢 Quiz!</button>
+      <a href="puzzleUang.html" class="btn-next-game" id="nextGameBtn">🎯 Lanjut Soal Berikutnya!</a>
+    </div>
+
+    <div id="successPopup" class="popup-overlay-global">
+      <div class="popup-content-box">
+        <div class="popup-icon-circle">🌟</div>
+        <h2 class="popup-title">HEBAT!</h2>
+        <p id="popupMessageBenar" class="popup-text"></p>
+        <button class="popup-btn-next" onclick="tutupDanLanjutSoal()">Lanjutkan Soal</button>
+      </div>
+    </div>
+
+    <div id="failedPopup" class="popup-overlay-global">
+      <div class="popup-content-box" style="border-color: #e74c3c; box-shadow: 0px 0px 30px rgba(231, 76, 60, 0.3)">
+        <div class="popup-icon-circle" style="animation: shakePop 0.5s ease-in-out">⚠️</div>
+        <h2 class="popup-title" style="color: #e74c3c">Kurang Tepat!</h2>
+        <p id="popupMessageSalah" class="popup-text"></p>
+        <button class="popup-btn-next" onclick="tutupDanUlangiSoal()">Coba Lagi</button>
+      </div>
+    </div>
+
+    <script>
+      let currentAudio = null;
+      let isPlaying = false;
+      let isQuizMode = false;
+      let targetNominal = 0;
+
+      // 1. BANK DATA DIPERLUAS: Menyimpan semua informasi mata uang rupiah
+      const bankUang = [
+        { nominal: 1000, teks: "Seribu Rupiah", img: "../assets/uang1000.png", alt: "Seribu", audioBelajar: "../audio/1000.mp3", audioTanya: "../audio/tanya1000.mp3" },
+        { nominal: 2000, teks: "Dua Ribu Rupiah", img: "../assets/uang2000.png", alt: "Dua Ribu", audioBelajar: "../audio/2000.mp3", audioTanya: "../audio/tanya2000.mp3" },
+        { nominal: 5000, teks: "Lima Ribu Rupiah", img: "../assets/uang5000.png", alt: "Lima Ribu", audioBelajar: "../audio/5000.mp3", audioTanya: "../audio/tanya5000.mp3" },
+        { nominal: 10000, teks: "Sepuluh Ribu Rupiah", img: "../assets/uang10000.png", alt: "Sepuluh Ribu", audioBelajar: "../audio/10000.mp3", audioTanya: "../audio/tanya10000.mp3" },
+        { nominal: 20000, teks: "Dua Puluh Ribu Rupiah", img: "../assets/uang20000.png", alt: "Dua Puluh Ribu", audioBelajar: "../audio/20000.mp3", audioTanya: "../audio/tanya20000.mp3" },
+        { nominal: 50000, teks: "Lima Puluh Ribu Rupiah", img: "../assets/uang50000.png", alt: "Lima Puluh Ribu", audioBelajar: "../audio/50000.mp3", audioTanya: "../audio/tanya50000.mp3" },
+        { nominal: 100000, teks: "Seratus Ribu Rupiah", img: "../assets/uang100000.png", alt: "Seratus Ribu", audioBelajar: "../audio/100000.mp3", audioTanya: "../audio/tanya100000.mp3" },
+      ];
+
+      // Fungsi bantu mengocok array (Algoritma Fisher-Yates)
+      function shuffle(array) {
+        let currentIndex = array.length,
+          randomIndex;
+        while (currentIndex != 0) {
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+          [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        }
+        return array;
+      }
+
+      // 2. FUNGSI RENDER: Menampilkan 4 kartu secara acak ke layar
+      function tampilkanKartu(daftarKartu) {
+        const grid = document.getElementById("gridUang");
+        grid.innerHTML = ""; // Kosongkan grid lama
+
+        daftarKartu.forEach((uang) => {
+          const card = document.createElement("div");
+          card.className = "card-uang";
+          // Gunakan JSON.stringify untuk mempermudah passing path audio sebagai string di inline event
+          card.onclick = () => pilihUang(uang.nominal, uang.audioBelajar);
+
+          card.innerHTML = `
+                    <img src="${uang.img}" alt="${uang.alt}">
+                    <p>Rp ${uang.nominal.toLocaleString("id-ID")}</p>
+                `;
+          grid.appendChild(card);
+        });
+      }
+
+      function playSuara(path) {
+        if (isPlaying) return;
+
+        isPlaying = true;
+        currentAudio = new Audio(path);
+
+        currentAudio
+          .play()
+          .then(() => {
+            currentAudio.onended = function () {
+              isPlaying = false;
+              currentAudio = null;
+            };
+          })
+          .catch((e) => {
+            console.log("Audio diblokir browser atau error:", e);
+            isPlaying = false;
+          });
+      }
+
+      function playIntro() {
+        playSuara("../audio/judulMengenalUang.mp3");
+      }
+
+      // 3. FUNGSI KUIS DENGAN SHUFFLE OTOMATIS
+      function startQuiz() {
+        if (isPlaying) return;
+
+        isQuizMode = true;
+
+        // TAMBAHKAN BARIS INI: Sembunyikan tombol lanjut saat pertanyaan diacak baru
+        document.getElementById("nextGameBtn").style.display = "none";
+
+        // Kocok data bank uang
+        const uangDikocok = shuffle([...bankUang]);
+        // Ambil 4 item pertama untuk ditampilkan di grid permainan
+        const empatPilihan = uangDikocok.slice(0, 4);
+
+        // Tentukan target kuis secara acak dari 4 item yang tampil tersebut
+        const soalTerpilih = empatPilihan[Math.floor(Math.random() * empatPilihan.length)];
+        targetNominal = soalTerpilih.nominal;
+
+        // Render 4 kartu terpilih ke grid HTML
+        tampilkanKartu(empatPilihan);
+
+        // Update Tampilan UI Soal
+        document.getElementById("targetNominalText").innerText = soalTerpilih.teks;
+        document.getElementById("quizBox").style.display = "block";
+        document.getElementById("quizBtn").innerText = "🔄 Ganti Pertanyaan Acak";
+
+        // Mainkan audio pertanyaan
+        playSuara(soalTerpilih.audioTanya);
+      }
+
+      function pilihUang(nominalTerpilih, audioPecahanPath) {
+        if (isPlaying) return;
+
+        if (isQuizMode) {
+          if (nominalTerpilih === targetNominal) {
+            playSuara("../audio/menang2.mp3");
+            tampilkanPopUpBerhasil("Pilihanmu Tepat Sekali.");
+
+            // Reset Tampilan Kuis setelah benar kembali ke tampilan standar
+            document.getElementById("quizBox").style.display = "none";
+            document.getElementById("quizBtn").innerText = "Ulangi Quiz!";
+            isQuizMode = false;
+
+            // Kembalikan ke susunan awal standar 4 kartu pertama
+            tampilkanKartu(bankUang.slice(0, 4));
+
+            // TAMBAHKAN BARIS INI: Munculkan tombol link ke DragDrop-Uang!
+            document.getElementById("nextGameBtn").style.display = "block";
+          } else {
+            playSuara("../audio/salah2.mp3");
+            tampilkanPopUpGagal("Pilih Lagi Jawaban yang Benar.");
+          }
+        } else {
+          playSuara(audioPecahanPath);
+        }
+      }
+
+      function tampilkanPopUpBerhasil(pesan) {
+        document.getElementById("popupMessageBenar").innerHTML = pesan;
+        document.getElementById("successPopup").style.display = "flex";
+      }
+
+      function tutupDanLanjutSoal() {
+        document.getElementById("successPopup").style.display = "none";
+      }
+
+      function tampilkanPopUpGagal(pesan) {
+        document.getElementById("popupMessageSalah").innerHTML = pesan;
+        document.getElementById("failedPopup").style.display = "flex";
+      }
+
+      function tutupDanUlangiSoal() {
+        document.getElementById("failedPopup").style.display = "none";
+      }
+
+      // Jalankan render 4 kartu default pertama kali saat halaman dibuka
+      tampilkanKartu(bankUang.slice(0, 4));
+    </script>
+  </body>
+</html>

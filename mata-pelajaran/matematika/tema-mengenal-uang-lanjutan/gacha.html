@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matematika Lanjutan: Mesin Gacha Misteri - BuVita EduPlay</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #121214;
+        background-image: radial-gradient(#252529 15%, transparent 16%);
+        background-size: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        user-select: none;
+        font-family: "Nunito", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .game-container {
+        width: 100%;
+        max-width: 950px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Header Neon Khas Lanjutan */
+      .gacha-header {
+        background: linear-gradient(135deg, #e67e22, #9b59b6);
+        color: white;
+        padding: 15px 35px;
+        border-radius: 20px;
+        border: 4px solid black;
+        box-shadow: 6px 6px 0px black;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+        text-align: center;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      /* LAYOUT UTAMA MESIN GACHA */
+      .gacha-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        gap: 30px;
+        width: 100%;
+        margin-bottom: 25px;
+      }
+      @media (max-width: 768px) {
+        .gacha-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Boks Mesin Kapsul Hadiah */
+      .mesin-gacha-box {
+        background-color: #2c2a38;
+        border: 4px solid black;
+        border-radius: 30px;
+        padding: 25px;
+        box-shadow: 8px 8px 0px #e67e22;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+      }
+
+      /* Kaca Kubah Tempat Kapsul berkumpul */
+      .kaca-kubah {
+        background: linear-gradient(180deg, #3d3a4d, #1e1d24);
+        border: 4px solid black;
+        border-radius: 20px;
+        width: 100%;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 15px;
+        overflow: hidden;
+        margin-bottom: 15px;
+        box-shadow: inset 0px 10px 20px rgba(0, 0, 0, 0.6);
+      }
+      .kapsul-item {
+        font-size: 2.3rem;
+        animation: getarKapsul 3s ease-in-out infinite alternate;
+      }
+
+      /* Lubang Tempat Hadiah Keluar */
+      .lubang-hadiah-drop {
+        background-color: #111;
+        border: 3px solid #e67e22;
+        border-radius: 50% 50% 10px 10px;
+        width: 110px;
+        height: 110px;
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
+        box-shadow: inset 0px 5px 15px rgba(0, 0, 0, 0.9);
+      }
+
+      /* Panel Penghitung Nota Struk Pembeli */
+      .panel-kontrol-kembalian {
+        background-color: #22202b;
+        border: 4px solid black;
+        border-radius: 30px;
+        padding: 20px;
+        box-shadow: 8px 8px 0px #9b59b6;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .display-nota-layar {
+        background-color: #0f0e14;
+        border: 3px solid #3d3a4d;
+        border-radius: 15px;
+        width: 100%;
+        padding: 15px;
+        color: #fff;
+        font-family: "Nunito", sans-serif;
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
+      .nota-title {
+        font-family: "Fredoka One", sans-serif;
+        color: #e67e22;
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+
+      /* Tempat Menyusun Kembalian */
+      .nampan-gacha-kembalian {
+        background-color: #16151c;
+        border: 3px dashed #9b59b6;
+        border-radius: 20px;
+        width: 100%;
+        min-height: 110px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        padding: 12px;
+      }
+      .uang-mini-meja {
+        width: 90px;
+        cursor: pointer;
+        animation: popIn 0.2s ease-out;
+      }
+      .uang-mini-meja img {
+        width: 100%;
+        border: 2px solid black;
+        border-radius: 4px;
+      }
+
+      /* Bagian Laci Dompet Uang */
+      .laci-uang-section {
+        background-color: #2c2a38;
+        border: 4px solid black;
+        border-radius: 24px;
+        padding: 20px;
+        width: 100%;
+        box-shadow: 6px 6px 0px black;
+        text-align: center;
+        margin-bottom: 25px;
+      }
+      .laci-title {
+        font-family: "Fredoka One", sans-serif;
+        color: white;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+      }
+      .row-pilihan-uang {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .uang-klik-card {
+        width: 125px;
+        cursor: pointer;
+        transition: 0.1s;
+      }
+      .uang-klik-card:hover {
+        transform: scale(1.05);
+      }
+      .uang-klik-card img {
+        width: 100%;
+        border-radius: 6px;
+        border: 2px solid black;
+        box-shadow: 3px 3px 0px black;
+      }
+
+      /* Rak Koleksi Mainan Anak */
+      .rak-koleksi-box {
+        background-color: #1e1d24;
+        border: 3px solid black;
+        border-radius: 16px;
+        width: 100%;
+        padding: 15px;
+        text-align: center;
+        box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+      }
+      .wadah-rak {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        min-height: 50px;
+        background-color: #111;
+        border-radius: 10px;
+        padding: 10px;
+        margin-top: 8px;
+        border-bottom: 4px solid #e67e22;
+      }
+      .hadiah-terpajang {
+        font-size: 2.2rem;
+        animation: popIn 0.3s ease-out;
+      }
+
+      /* Button Action */
+      .btn-putar-mesin {
+        background: linear-gradient(135deg, #e67e22, #d35400);
+        color: white;
+        font-family: "Fredoka One", sans-serif;
+        padding: 12px 35px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 50px;
+        box-shadow: 0px 5px 0px black;
+        cursor: pointer;
+        margin-top: 15px;
+        display: none;
+      }
+      .btn-putar-mesin:active {
+        transform: translateY(3px);
+        box-shadow: 0px 2px 0px black;
+      }
+
+      /* Animasi */
+      @keyframes getarKapsul {
+        0%,
+        100% {
+          transform: translateY(0) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-6px) rotate(-4px);
+        }
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes shakePop {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-10px);
+        }
+        40%,
+        80% {
+          transform: translateX(10px);
+        }
+      }
+
+      /* Pop-up Global */
+      .popup-overlay-global {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+      .popup-content-box {
+        background-color: #22202b;
+        border: 4px solid #2ecc71;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0px 0px 30px rgba(46, 204, 113, 0.3);
+        animation: zoomInPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .popup-icon-circle {
+        font-size: 5rem;
+        margin-bottom: 20px;
+      }
+      .popup-title {
+        font-family: "Fredoka One", sans-serif;
+        color: #2ecc71;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+      .popup-text {
+        font-family: "Nunito", sans-serif;
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        line-height: 1.4;
+      }
+      .popup-btn-next {
+        background-color: #f1b811;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 30px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 15px;
+        box-shadow: 5px 5px 0px black;
+        cursor: pointer;
+      }
+      @keyframes zoomInPop {
+        from {
+          transform: scale(0.5);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Styling Tombol Navigasi Bawah */
+      .navigasi-level-box {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 900px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        gap: 20px;
+      }
+
+      .btn-nav-level {
+        flex: 1;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.1rem;
+        padding: 15px 20px;
+        border: 3px solid black;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 4px 4px 0px black;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+        color: white;
+      }
+
+      .btn-nav-level:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0px black;
+      }
+
+      /* Warna Tombol Back (Merah Tua/Retro) */
+      .btn-nav-level.btn-back {
+        background-color: #95a5a6;
+        color: black;
+      }
+      .btn-nav-level.btn-back:hover {
+        background-color: #bdc3c7;
+      }
+
+      /* Warna Tombol Next (Biru/Ungu Retro) */
+      .btn-nav-level.btn-next {
+        background-color: #9b59b6;
+      }
+      .btn-nav-level.btn-next:hover {
+        background-color: #8e44ad;
+      }
+
+      @media (max-width: 480px) {
+        .navigasi-level-box {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+    </header>
+
+    <div class="game-container">
+      <div class="gacha-header" id="instruksiSuaraBtn" onclick="putarSuaraSoal()">🔮 Mesin Kapsul Kembalian Gacha 🔊</div>
+
+      <div class="gacha-grid">
+        <div class="mesin-gacha-box">
+          <div class="kaca-kubah">
+            <span class="kapsul-item">🔴</span><span class="kapsul-item" style="animation-delay: 0.3s">🔵</span> <span class="kapsul-item" style="animation-delay: 0.6s">🟢</span
+            ><span class="kapsul-item" style="animation-delay: 0.1s">🟡</span> <span class="kapsul-item" style="animation-delay: 0.8s">🟣</span><span class="kapsul-item" style="animation-delay: 0.4s">🟠</span>
+          </div>
+          <p style="font-size: 0.9rem; font-family: &quot;Nunito&quot;; color: #aaa">Tempat Keluar Mainan:</p>
+          <div class="lubang-hadiah-drop" id="lubangHadiah">❓</div>
+        </div>
+
+        <div class="panel-kontrol-kembalian">
+          <div class="display-nota-layar">
+            <div class="nota-title">📄 STRUK BELANJA GACHA</div>
+            <div style="border-top: 1px dashed #444; margin-bottom: 8px"></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px"><span>Harga Gacha:</span><span id="txtHargaGacha" style="color: #e67e22">Rp 0</span></div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px"><span>Uang Dimasukkan:</span><span id="txtUangDimasukkan" style="color: #3498db">Rp 0</span></div>
+            <div style="border-top: 1px dashed #444; margin: 8px 0"></div>
+            <div style="display: flex; justify-content: space-between; font-weight: 900"><span>Hitung Kembalian:</span><span id="totalPapanTeks" style="color: #2ecc71">Rp 0</span></div>
+          </div>
+
+          <p style="font-size: 0.8rem; color: #888; font-family: &quot;Nunito&quot;; margin-bottom: 5px">Klik uang di nampan jika batal:</p>
+          <div class="nampan-gacha-kembalian" id="wadahUangMeja"></div>
+
+          <button class="btn-putar-mesin" id="btnBayarSekarang" onclick="validasiKembalian()">🔑 PUTAR MESIN GACHA</button>
+        </div>
+      </div>
+
+      <div class="laci-uang-section">
+        <h3 class="laci-title">🗄️ Ambil Uang Kembalian dari Laci Kasir:</h3>
+        <div class="row-pilihan-uang" id="wadahDompetUang"></div>
+      </div>
+
+      <div class="rak-koleksi-box">
+        <p style="font-family: &quot;Fredoka One&quot;; color: #f1c40f; font-size: 1rem">🧸 Lemari Pajangan Hadiah Gacha Kamu:</p>
+        <div class="wadah-rak" id="rakPajangan">
+          <span style="color: #555; font-size: 0.9rem; font-family: &quot;Nunito&quot;" id="teksKosong">Belum ada koleksi hadiah. Selesaikan soal untuk dapat gacha!</span>
+        </div>
+      </div>
+
+      <div class="navigasi-level-box">
+        <button class="btn-nav-level btn-back" onclick="navigasiKembali()">⬅️ GAME SEBELUMNYA</button>
+        <button class="btn-nav-level btn-next" onclick="navigasiLanjut()">SELESAI MAIN ➡️</button>
+      </div>
+
+      <div id="successPopup" class="popup-overlay-global">
+        <div class="popup-content-box">
+          <div class="popup-icon-circle" id="iconHadiahPopup">🎁</div>
+          <h2 class="popup-title">BERHASIL!</h2>
+          <p id="popupMessageBenar" class="popup-text"></p>
+          <button class="popup-btn-next" onclick="tutupDanLanjutSoal()">AMBIL MAINAN & LANJUT 🌟</button>
+        </div>
+      </div>
+
+      <div id="failedPopup" class="popup-overlay-global">
+        <div class="popup-content-box" style="border-color: #e74c3c; box-shadow: 0px 0px 30px rgba(231, 76, 60, 0.3)">
+          <div class="popup-icon-circle" style="animation: shakePop 0.5s ease-in-out">❌</div>
+          <h2 class="popup-title" style="color: #e74c3c">BELUM PAS</h2>
+          <p id="popupMessageSalah" class="popup-text"></p>
+          <button class="popup-btn-next" onclick="tutupDanUlangiSoal()">Coba Lagi</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const masterGambarUang = {
+        1000: "../assets/uang1000.png",
+        2000: "../assets/uang2000.png",
+        5000: "../assets/uang5000.png",
+        10000: "../assets/uang10000.png",
+        20000: "../assets/uang20000.png",
+      };
+
+      // Kumpulan Emoji Hadiah Kejutan Gacha agar menarik
+      const kumpulanHadiahGacha = ["🧸", "🚀", "🦖", "🏎️", "🛸", "🦄", "⚽", "🎮", "🛹", "🎨"];
+
+      const daftarSoalGacha = [
+        { harga: 13000, uangBayar: 20000, kembalianBenar: 7000, audio: "../../../audio/gacha_13rb.mp3" },
+        { harga: 6000, uangBayar: 10000, kembalianBenar: 4000, audio: "../../../audio/gacha_6rb.mp3" },
+        { harga: 15000, uangBayar: 20000, kembalianBenar: 5000, audio: "../../../audio/gacha_15rb.mp3" },
+        { harga: 4000, uangBayar: 5000, kembalianBenar: 1000, audio: "../../../audio/gacha_4rb.mp3" },
+        { harga: 11000, uangBayar: 20000, kembalianBenar: 9000, audio: "../../../audio/gacha_11rb.mp3" },
+      ];
+
+      let soalSekarang = null;
+      let totalUangDiMeja = 0;
+      let arrayUangDiMeja = [];
+      let koleksiSiswa = [];
+
+      function mulaiGameGacha() {
+        const acak = Math.floor(Math.random() * daftarSoalGacha.length);
+        soalSekarang = daftarSoalGacha[acak];
+
+        document.getElementById("txtHargaGacha").innerText = "Rp " + soalSekarang.harga.toLocaleString("id-ID");
+        document.getElementById("txtUangDimasukkan").innerText = "Rp " + soalSekarang.uangBayar.toLocaleString("id-ID");
+        document.getElementById("lubangHadiah").innerText = "❓";
+
+        // Render Pecahan Laci Kasir
+        const wadahDompet = document.getElementById("wadahDompetUang");
+        wadahDompet.innerHTML = "";
+        const pecahanPilihan = [1000, 2000, 5000, 10000];
+
+        pecahanPilihan.forEach((nominal) => {
+          const itemUang = document.createElement("div");
+          itemUang.className = "uang-klik-card";
+          itemUang.onclick = () => tambahUangLewatKlik(nominal);
+          itemUang.innerHTML = `<img src="${masterGambarUang[nominal]}" alt="Uang ${nominal}">`;
+          wadahDompet.appendChild(itemUang);
+        });
+
+        totalUangDiMeja = 0;
+        arrayUangDiMeja = [];
+        updateUIMejaNampan();
+        document.getElementById("btnBayarSekarang").style.display = "none";
+
+        putarSuaraSoal();
+      }
+
+      function putarSuaraSoal() {
+        if (soalSekarang && soalSekarang.audio) {
+          let audio = new Audio(soalSekarang.audio);
+          audio.play().catch((e) => console.log("Audio boks belum siap"));
+        }
+      }
+
+      function tambahUangLewatKlik(nominal) {
+        arrayUangDiMeja.push(nominal);
+        let audioClick = new Audio("../../../audio/benar.mp3");
+        audioClick.play().catch((e) => {});
+        hitungTotalMeja();
+      }
+
+      function hitungTotalMeja() {
+        totalUangDiMeja = arrayUangDiMeja.reduce((a, b) => a + b, 0);
+        updateUIMejaNampan();
+
+        if (totalUangDiMeja > 0) {
+          document.getElementById("btnBayarSekarang").style.display = "inline-block";
+        } else {
+          document.getElementById("btnBayarSekarang").style.display = "none";
+        }
+      }
+
+      function hapusUangIndividu(index) {
+        arrayUangDiMeja.splice(index, 1);
+        let audioCancel = new Audio("../../../audio/salah.mp3");
+        audioCancel.play().catch((e) => {});
+        hitungTotalMeja();
+      }
+
+      function updateUIMejaNampan() {
+        const wadah = document.getElementById("wadahUangMeja");
+        wadah.innerHTML = "";
+
+        arrayUangDiMeja.forEach((nom, index) => {
+          const divUang = document.createElement("div");
+          divUang.className = "uang-mini-meja";
+          divUang.onclick = () => (html = hapusUangIndividu(index));
+          divUang.innerHTML = `<img src="${masterGambarUang[nom]}">`;
+          wadah.appendChild(divUang);
+        });
+        document.getElementById("totalPapanTeks").innerText = "Rp " + totalUangDiMeja.toLocaleString("id-ID");
+      }
+
+      // --- VALIDASI GACHA ---
+      function validasiKembalian() {
+        if (totalUangDiMeja === soalSekarang.kembalianBenar) {
+          let audioBenar = new Audio("../../../audio/menang.mp3");
+          audioBenar.play().catch((e) => {});
+
+          // Ambil Hadiah Acak Gacha
+          const hadiahAcak = kumpulanHadiahGacha[Math.floor(Math.random() * kumpulanHadiahGacha.length)];
+          koleksiSiswa.push(hadiahAcak);
+
+          document.getElementById("lubangHadiah").innerText = hadiahAcak;
+          document.getElementById("iconHadiahPopup").innerText = hadiahAcak;
+
+          tampilkanPopUpBerhasil(
+            `🎉 Keren sekali! Hitungan kembalianmu PAS senilai <b>Rp ${soalSekarang.kembalianBenar.toLocaleString("id-ID")}</b>.<br><br>Mesin berputar dan kamu berhasil mendapatkan hadiah gacha misteri: <b>${hadiahAcak}</b>!`,
+          );
+        } else if (totalUangDiMeja > soalSekarang.kembalianBenar) {
+          let audioSalah = new Audio("../../../audio/salah.mp3");
+          audioSalah.play().catch((e) => {});
+          let lebihnya = totalUangDiMeja - soalSekarang.kembalianBenar;
+          tampilkanPopUpGagal(`⚠️ Uang kembalian yang kamu masukkan <b>kelebihan Rp ${lebihnya.toLocaleString("id-ID")}</b>.<br><br>Yuk kurangi beberapa lembar uang dari nampan agar mesin bisa berputar!`);
+        } else {
+          let audioSalah = new Audio("../../../audio/salah.mp3");
+          audioSalah.play().catch((e) => {});
+          let kurangnya = soalSekarang.kembalianBenar - totalUangDiMeja;
+          tampilkanPopUpGagal(`⚠️ Yah, uang kembaliannya masih <b>kurang Rp ${kurangnya.toLocaleString("id-ID")}</b>.<br><br>Ayo tambahkan uang lagi ke dalam nampan mesin!`);
+        }
+      }
+
+      function tampilkanPopUpBerhasil(pesan) {
+        document.getElementById("popupMessageBenar").innerHTML = pesan;
+        document.getElementById("successPopup").style.display = "flex";
+      }
+
+      function tampilkanPopUpGagal(pesan) {
+        document.getElementById("popupMessageSalah").innerHTML = pesan;
+        document.getElementById("failedPopup").style.display = "flex";
+      }
+
+      function tutupDanLanjutSoal() {
+        document.getElementById("successPopup").style.display = "none";
+        perbaruiRakLemariPajangan();
+        mulaiGameGacha();
+      }
+
+      function tutupDanUlangiSoal() {
+        document.getElementById("failedPopup").style.display = "none";
+      }
+
+      function perbaruiRakLemariPajangan() {
+        const rak = document.getElementById("rakPajangan");
+        if (koleksiSiswa.length > 0) {
+          rak.innerHTML = "";
+          koleksiSiswa.forEach((hadiah) => {
+            const spanHadiah = document.createElement("span");
+            spanHadiah.className = "hadiah-terpajang";
+            spanHadiah.innerText = hadiah;
+            rak.appendChild(spanHadiah);
+          });
+        }
+      }
+
+      function navigasiLanjut() {
+        alert("🎉 Selamat ya! Kamu sudah menaklukkan seluruh rangkaian petualangan berhitung di Level Lanjutan BuVita EduPlay!");
+        window.location.href = "../../../games.html";
+      }
+
+      function navigasiKembali() {
+        window.location.href = "KembalianCelengan.html";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        mulaiGameGacha();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matematika Lanjutan: Supermarket BuVita - Hitung Kembalian</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+      /* Style Dasar & Tema BuVita */
+      body {
+        background-color: #121214;
+        background-image: radial-gradient(#252529 15%, transparent 16%);
+        background-size: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        user-select: none;
+        font-family: "Nunito", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Wrapper Game agar pas di bawah navbar */
+      .game-container {
+        width: 100%;
+        max-width: 850px;
+        padding: 20px;
+        box-sizing: border-box;
+        margin-top: 20px;
+      }
+
+      .game-header {
+        background-color: #e67e22;
+        color: white;
+        padding: 15px;
+        border-radius: 12px;
+        border: 3px solid black;
+        box-shadow: 5px 5px 0px black;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.8rem;
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      /* Area Kasir & Transaksi */
+      .papan-transaksi {
+        background-color: #1e1e1e;
+        border: 3px solid black;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 6px 6px 0px black;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+      .baris-atas {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #2c3e50;
+        padding: 15px;
+        border-radius: 12px;
+        border: 2px solid black;
+      }
+      .info-belanja {
+        font-size: 1.2rem;
+        font-weight: 700;
+        text-align: left;
+        line-height: 1.6;
+      }
+      .info-belanja text {
+        color: #f1c40f;
+      }
+      .karakter-zone {
+        font-size: 4rem;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      /* Layar Monitor Kasir (Target) */
+      .layar-kasir {
+        background-color: #2ecc71;
+        color: #1d271f;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.5rem;
+        padding: 15px;
+        border-radius: 10px;
+        border: 3px solid black;
+        text-align: center;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Meja Penyerahan Kembalian Anak */
+      .meja-kembalian {
+        background-color: #34495e;
+        border: 3px dashed #e67e22;
+        border-radius: 15px;
+        padding: 15px;
+        min-height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        cursor: pointer;
+      }
+      .uang-pilihan {
+        width: 90px;
+        transition: transform 0.2s;
+        animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .uang-pilihan img {
+        width: 100%;
+        border: 2px solid black;
+        border-radius: 4px;
+        box-shadow: 2px 2px 0px black;
+      }
+
+      /* Laci Uang Kasir (Pilihan Lembaran) */
+      .laci-kasir-box {
+        background-color: #7f8c8d;
+        border: 4px solid black;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 5px 5px 0px black;
+      }
+      .laci-title {
+        font-family: "Fredoka One", sans-serif;
+        color: black;
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 1.2rem;
+        text-shadow: 1px 1px white;
+      }
+      .wadah-lembaran {
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .btn-ambil-uang {
+        background: none;
+        border: none;
+        width: 100px;
+        cursor: pointer;
+        transition: transform 0.1s;
+      }
+      .btn-ambil-uang img {
+        width: 100%;
+        border: 2px solid black;
+        border-radius: 4px;
+        box-shadow: 3px 3px 0px black;
+      }
+      .btn-ambil-uang:active {
+        transform: scale(0.95);
+      }
+
+      /* Tombol Aksi */
+      .btn-aksi-container {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .btn-action {
+        flex: 1;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 4px 4px 0px black;
+        color: white;
+      }
+      .btn-action.btn-reset {
+        background-color: #e74c3c;
+      }
+      .btn-action.btn-submit {
+        background-color: #2ecc71;
+        color: black;
+      }
+      .btn-action:active {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0px black;
+      }
+
+      /* Pop-up Global */
+      .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+      .popup-box {
+        background-color: #1e1e1e;
+        border: 4px solid #2ecc71;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0px 0px 30px rgba(46, 204, 113, 0.3);
+      }
+      .popup-icon {
+        font-size: 5rem;
+        margin-bottom: 20px;
+        animation: bouncePop 1s infinite;
+      }
+      .popup-title {
+        font-family: "Fredoka One", sans-serif;
+        color: #2ecc71;
+        font-size: 2.3rem;
+        margin-bottom: 10px;
+      }
+      .popup-text {
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 25px;
+      }
+      .popup-btn {
+        background-color: #f1c40f;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 12px 25px;
+        font-size: 1.2rem;
+        border: 3px solid black;
+        border-radius: 12px;
+        box-shadow: 4px 4px 0px black;
+        cursor: pointer;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+      @keyframes pop {
+        0% {
+          transform: scale(0);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes bouncePop {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-12px);
+        }
+      }
+
+      /* Navigasi Footer */
+      .navigasi-box {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 850px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        gap: 15px;
+      }
+      .btn-nav {
+        flex: 1;
+        padding: 15px;
+        font-family: "Fredoka One", sans-serif;
+        border: 3px solid black;
+        border-radius: 12px;
+        cursor: pointer;
+        color: white;
+        box-shadow: 3px 3px 0px black;
+        font-size: 1.1rem;
+      }
+      .btn-nav.back {
+        background-color: #7f8c8d;
+        color: black;
+      }
+      .btn-nav.next {
+        background-color: #9b59b6;
+      }
+      .btn-nav:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px black;
+      }
+
+      @media (max-width: 550px) {
+        .navigasi-box {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+    </header>
+
+    <div class="game-container">
+      <div class="game-header">🛒 Supermarket BuVita: Hitung Kembalian! 🧮</div>
+
+      <div class="papan-transaksi">
+        <div class="baris-atas">
+          <div class="info-belanja">
+            Pelanggan: <strong id="namaHewan" style="color: #f1c40f">...</strong><br />
+            Total Belanja: <strong id="hargaBarang" style="color: #e67e22">Rp 0</strong><br />
+            Uang Dibayar: <strong id="uangDibayar" style="color: #2ecc71">Rp 0</strong>
+          </div>
+          <div class="karakter-zone" id="emojiHewan">🐱</div>
+        </div>
+
+        <div class="layar-kasir">💵 Taruh Kembalian di Meja: <span id="totalKembalianUser" style="color: #fff; background: #000; padding: 2px 10px; border-radius: 5px">Rp 0</span></div>
+
+        <div class="meja-kembalian" id="mejaKembalian" onclick="hapusUangTerakhir()">
+          <span style="color: #bdc3c7; font-size: 0.9rem" id="placeholderMeja">Klik lembaran uang di laci bawah untuk memindahkan ke meja ini (Klik meja untuk batalkan lembaran terakhir)</span>
+        </div>
+      </div>
+
+      <div class="laci-kasir-box">
+        <p class="laci-title">🗄️ LACI KASIR (Klik pecahan uang untuk diambil):</p>
+        <div class="wadah-lembaran">
+          <button class="btn-ambil-uang" onclick="tambahUangKeMeja(1000)"><img src="../assets/uang1000.png" alt="1000" /></button>
+          <button class="btn-ambil-uang" onclick="tambahUangKeMeja(2000)"><img src="../assets/uang2000.png" alt="2000" /></button>
+          <button class="btn-ambil-uang" onclick="tambahUangKeMeja(5000)"><img src="../assets/uang5000.png" alt="5000" /></button>
+          <button class="btn-ambil-uang" onclick="tambahUangKeMeja(10000)"><img src="../assets/uang10000.png" alt="10000" /></button>
+          <button class="btn-ambil-uang" onclick="tambahUangKeMeja(20000)"><img src="../assets/uang20000.png" alt="20000" /></button>
+        </div>
+      </div>
+
+      <div class="btn-aksi-container">
+        <button class="btn-action btn-reset" onclick="kosongkanMeja()">🔄 Bersihkan Meja</button>
+        <button class="btn-action btn-submit" onclick="prosesBayarKembalian()">✅ Berikan Uang Kembalian!</button>
+      </div>
+    </div>
+
+    <div class="navigasi-box">
+      <button class="btn-nav back" onclick="window.location.href = '../menengah/TebakDompet.html'">⬅️ KELUAR KE KATALOG</button>
+      <button class="btn-nav next" onclick="alert('Hebat! Kamu telah membuka game pertama Level Lanjutan. Nantikan game berikutnya ya!')">GAME BERIKUTNYA ➡️</button>
+    </div>
+
+    <div id="statusPopup" class="popup-overlay">
+      <div class="popup-box" id="popupBox">
+        <div class="popup-icon" id="popupIcon">🌟</div>
+        <h2 class="popup-title" id="popupTitle">BERHASIL!</h2>
+        <p class="popup-text" id="popupText">Pesan status...</p>
+        <button class="popup-btn" id="popupBtnAksi" onclick="tutupPopup()">OK</button>
+      </div>
+    </div>
+
+    <script>
+      const masterGambarUang = {
+        1000: "../assets/uang1000.png",
+        2000: "../assets/uang2000.png",
+        5000: "../assets/uang5000.png",
+        10000: "../assets/uang10000.png",
+        20000: "../assets/uang20000.png",
+      };
+
+      const daftarHewanLanjutan = [
+        { emoji: "🦊", nama: "Rubah" },
+        { emoji: "🐼", nama: "Panda" },
+        { emoji: "🐸", nama: "Katak" },
+        { emoji: "🐵", nama: "Monyet" },
+      ];
+
+      // Bank data skenario belanja: [Harga Barang, Uang yang Dibayarkan]
+      const skenarioBelanja = [
+        { harga: 4000, bayar: 10000 },
+        { harga: 13000, bayar: 20000 },
+        { harga: 5000, bayar: 10000 },
+        { harga: 15000, bayar: 20000 },
+        { harga: 22000, bayar: 50000 },
+        { harga: 35000, bayar: 50000 },
+        { harga: 8000, bayar: 20000 },
+      ];
+
+      let targetKembalianBenar = 0;
+      let susunanUangMejaUser = [];
+
+      function acakSkenarioBaru() {
+        // 1. Acak Hewan
+        const hewan = daftarHewanLanjutan[Math.floor(Math.random() * daftarHewanLanjutan.length)];
+        document.getElementById("emojiHewan").innerText = hewan.emoji;
+        document.getElementById("namaHewan").innerText = hewan.nama;
+
+        // 2. Acak Skenario Transaksi
+        const s = skenarioBelanja[Math.floor(Math.random() * skenarioBelanja.length)];
+        document.getElementById("hargaBarang").innerText = "Rp " + s.harga.toLocaleString("id-ID");
+        document.getElementById("uangDibayar").innerText = "Rp " + s.bayar.toLocaleString("id-ID");
+
+        // Hitung target kembalian
+        targetKembalianBenar = s.bayar - s.harga;
+
+        // Reset Meja Kasir User
+        kosongkanMeja();
+      }
+
+      function tambahUangKeMeja(nominal) {
+        susunanUangMejaUser.push(nominal);
+        renderUangMeja();
+      }
+
+      function hapusUangTerakhir() {
+        susunanUangMejaUser.pop();
+        renderUangMeja();
+      }
+
+      function kosongkanMeja() {
+        susunanUangMejaUser = [];
+        renderUangMeja();
+        document.getElementById("placeholderMeja").style.display = "block";
+      }
+
+      function renderUangMeja() {
+        const meja = document.getElementById("mejaKembalian");
+        const placeholder = document.getElementById("placeholderMeja");
+
+        meja.innerHTML = "";
+        meja.appendChild(placeholder);
+
+        // ✅ satu-satunya tempat yang mengatur tampil/sembunyi placeholder
+        placeholder.style.display = susunanUangMejaUser.length === 0 ? "block" : "none";
+
+        let totalSementara = 0;
+
+        susunanUangMejaUser.forEach((nominal) => {
+          totalSementara += nominal;
+          const div = document.createElement("div");
+          div.className = "uang-pilihan";
+          div.innerHTML = `<img src="${masterGambarUang[nominal]}" alt="${nominal}">`;
+          meja.appendChild(div);
+        });
+
+        document.getElementById("totalKembalianUser").innerText = "Rp " + totalSementara.toLocaleString("id-ID");
+      }
+
+      function prosesBayarKembalian() {
+        const totalUser = susunanUangMejaUser.reduce((a, b) => a + b, 0);
+
+        if (totalUser === targetKembalianBenar) {
+          bukaPopup(
+            "🌟 HEBAT, KAMU BERHASIL!",
+            `Hitunganmu tepat sekali! Total kembalian sebesar <strong>Rp ${targetKembalianBenar.toLocaleString("id-ID")}</strong> berhasil diberikan secara akurat. Kamu kasir profesional! 🛒`,
+            "#2ecc71",
+            "🎉",
+            true,
+          );
+        } else {
+          bukaPopup(
+            "⚠️ WAH, BELUM PAS NIHH",
+            `Kembalian yang kamu susun berjumlah Rp ${totalUser.toLocaleString("id-ID")}, padahal seharusnya Rp ${targetKembalianBenar.toLocaleString("id-ID")}. Yuk hitung kembali lembarannya!`,
+            "#e74c3c",
+            "❌",
+            false,
+          );
+        }
+      }
+
+      function bukaPopup(title, text, borderColor, icon, isSucceed) {
+        const pop = document.getElementById("statusPopup");
+        const box = document.getElementById("popupBox");
+
+        document.getElementById("popupTitle").innerText = title;
+        document.getElementById("popupTitle").style.color = borderColor;
+        document.getElementById("popupText").innerHTML = text;
+        document.getElementById("popupIcon").innerText = icon;
+        box.style.borderColor = borderColor;
+
+        const btn = document.getElementById("popupBtnAksi");
+        if (isSucceed) {
+          btn.innerText = "LANJUT TRANSAKSI LAIN ✨";
+          btn.onclick = () => {
+            tentukanLanjutSoal();
+          };
+        } else {
+          btn.innerText = "Coba Hitung Lagi 🔄";
+          btn.onclick = () => {
+            tentukanTutupSaja();
+          };
+        }
+
+        pop.style.display = "flex";
+      }
+
+      function tentukanLanjutSoal() {
+        document.getElementById("statusPopup").style.display = "none";
+        acakSkenarioBaru();
+      }
+
+      function tentukanTutupSaja() {
+        document.getElementById("statusPopup").style.display = "none";
+      }
+
+      document.addEventListener("DOMContentLoaded", acakSkenarioBaru);
+    </script>
+  </body>
+</html>

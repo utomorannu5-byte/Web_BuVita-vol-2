@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Bahasa Indonesia: Roda Kata Berputar - BuVita EduPlay</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #121214;
+        background-image: radial-gradient(#252529 15%, transparent 16%);
+        background-size: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .game-container {
+        width: 100%;
+        max-width: 900px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .roda-header {
+        background: linear-gradient(135deg, #f1c40f, #f39c12);
+        color: black;
+        padding: 15px 30px;
+        border-radius: 20px;
+        border: 4px solid black;
+        box-shadow: 6px 6px 0px black;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+        text-align: center;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      .level-selector-zone {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+        width: 100%;
+      }
+      .btn-level-pilih {
+        flex: 1;
+        font-family: "Fredoka One", sans-serif;
+        padding: 12px;
+        border: 3px solid black;
+        border-radius: 12px;
+        cursor: pointer;
+        color: white;
+        box-shadow: 4px 4px 0px black;
+        font-size: 1.1rem;
+        transition: 0.1s;
+        text-align: center;
+      }
+      .btn-level-pilih.active {
+        transform: translateY(4px);
+        box-shadow: 0px 0px 0px black;
+        border-color: white;
+      }
+
+      /* Arena Utama Roda */
+      .papan-main-roda {
+        background-color: #1c1b22;
+        border: 4px solid black;
+        border-radius: 24px;
+        padding: 30px 20px;
+        width: 100%;
+        box-shadow: 6px 6px 0px black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 25px;
+      }
+
+      /* Struktur Roda Keberuntungan Visual Mini */
+      .container-wheel-system {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin-bottom: 25px;
+      }
+      .jarum-penunjuk-roda {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-top: 25px solid #e74c3c;
+        z-index: 10;
+        filter: drop-shadow(0px 3px 0px black);
+      }
+      .lingkaran-roda-visual {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 6px solid black;
+        background: conic-gradient(#3498db 0% 25%, #e67e22 25% 50%, #9b59b6 50% 75%, #2ecc71 75% 100%);
+        box-shadow: 0px 8px 0px black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 3s cubic-bezier(0.1, 0.8, 0.1, 1);
+      }
+      .pusat-roda-emoji {
+        width: 90px;
+        height: 90px;
+        background-color: #111014;
+        border: 4px solid white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3.5rem;
+        color: white;
+        box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.6);
+      }
+
+      /* Tombol Putar Besar */
+      .btn-putar-roda-utama {
+        background-color: #e74c3c;
+        color: white;
+        font-family: "Fredoka One", sans-serif;
+        padding: 12px 35px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0px 6px 0px black;
+        margin-bottom: 30px;
+        transition: 0.1s;
+      }
+      .btn-putar-roda-utama:active {
+        transform: translateY(4px);
+        box-shadow: 0px 2px 0px black;
+      }
+
+      /* Zona Pilihan Jawaban Teks */
+      .area-pilihan-teks-roda {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 500px;
+        padding-top: 20px;
+        border-top: 2px dashed #333;
+      }
+      .btn-opsi-jawaban-roda {
+        background-color: #2c2a38;
+        border: 3px solid black;
+        border-radius: 16px;
+        padding: 15px;
+        text-align: center;
+        color: white;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.3rem;
+        cursor: pointer;
+        box-shadow: 4px 4px 0px black;
+        transition: 0.1s;
+      }
+      .btn-opsi-jawaban-roda:active {
+        transform: translateY(2px);
+        box-shadow: 2px 2px 0px black;
+      }
+
+      .popup-overlay-global {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+      .popup-content-box {
+        background-color: #1c1b22;
+        border: 4px solid #2ecc71;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+      }
+      .popup-btn-next {
+        background-color: #f1b811;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 30px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 15px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+    </header>
+
+    <div class="game-container">
+      <div class="roda-header" id="btnSuara" onclick="putarSuaraMisi()">🎡 Roda Bahasa: Putar & Tebak Kata 🔊</div>
+
+      <div class="level-selector-zone">
+        <button class="btn-level-pilih id-dasar active" style="background-color: #2ecc71" onclick="gantiLevelRoda('dasar')">
+          🟢 LEVEL DASAR<br /><span style="font-size: 0.75rem; font-family: &quot;Nunito&quot;; font-weight: bold">(1 Kata Hewan)</span>
+        </button>
+        <button class="btn-level-pilih id-menengah" style="background-color: #f1c40f; color: black" onclick="gantiLevelRoda('menengah')">
+          🟡 MENENGAH<br /><span style="font-size: 0.75rem; font-family: &quot;Nunito&quot;; font-weight: bold">(2 Kata Suasana)</span>
+        </button>
+        <button class="btn-level-pilih id-lanjutan" style="background-color: #e74c3c" onclick="gantiLevelRoda('lanjutan')">
+          🔴 LANJUTAN<br /><span style="font-size: 0.75rem; font-family: &quot;Nunito&quot;; font-weight: bold">(3 Kata Adegan)</span>
+        </button>
+      </div>
+
+      <div class="papan-main-roda">
+        <div class="container-wheel-system">
+          <div class="jarum-penunjuk-roda"></div>
+          <div class="lingkaran-roda-visual" id="rodaVisualElemen">
+            <div class="pusat-roda-emoji" id="emojiRodaPusat">❓</div>
+          </div>
+        </div>
+
+        <button class="btn-putar-roda-utama" id="btnPutar" onclick="putarRodaSekarang()">TEKAN & PUTAR 🔄</button>
+
+        <p style="font-family: &quot;Nunito&quot;; font-weight: 900; color: #aaa; margin-bottom: 15px; text-align: center" id="labelMisiRoda">Klik tombol di atas untuk memulai putaran misteri!</p>
+
+        <div class="area-pilihan-teks-roda" id="zonaOpsiPilihan"></div>
+      </div>
+
+      <div class="navigasi-level-box">
+        <button class="btn-nav-level btn-back" onclick="window.location.href = 'DetektifBahasa.html'">⬅️ KEMBALI</button>
+        <button class="btn-nav-level btn-next" onclick="window.location.href = '../../../games.html'">MENU UTAMA ➡️</button>
+      </div>
+
+      <div id="successPopup" class="popup-overlay-global">
+        <div class="popup-content-box">
+          <div style="font-size: 5rem; margin-bottom: 15px">🎡🌟</div>
+          <h2 style="font-family: &quot;Fredoka One&quot;; color: #2ecc71; font-size: 2.2rem; margin-bottom: 10px">KAMU HEBAT!</h2>
+          <p id="popupMessage" style="font-family: &quot;Nunito&quot;; color: white; font-size: 1.2rem; margin-bottom: 25px"></p>
+          <button class="popup-btn-next" onclick="tutupDanResetRoda()">PUTAR LAGI 🔄</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Database Soal dengan Variasi Tingkatan Struktur Kosakata
+      const databaseRoda = {
+        dasar: [
+          { emoji: "🐄", benar: "SAPI", opsi: ["AYAM", "SAPI", "BEBEK"], audio: "../../../audio/roda_sapi.mp3" },
+          { emoji: "🐱", benar: "KUCING", opsi: ["KUCING", "BURUNG", "IKAN"], audio: "../../../audio/roda_kucing.mp3" },
+        ],
+        menengah: [
+          { emoji: "☀️", benar: "PAGI CERAH", opsi: ["MALAM GELAP", "PAGI CERAH", "HUJAN DERAS"], audio: "../../../audio/roda_pagicerah.mp3" },
+          { emoji: "🌙", benar: "MALAM SEPI", opsi: ["SIANG PANAS", "MALAM SEPI", "SORE INDAH"], audio: "../../../audio/roda_malamsepi.mp3" },
+        ],
+        lanjutan: [
+          { emoji: "🍕", benar: "KAKAK MAKAN PIZZA", opsi: ["ADIK MINUM SUSU", "AYAH BACA BUKU", "KAKAK MAKAN PIZZA"], audio: "../../../audio/roda_kakakmakan.mp3" },
+          { emoji: "🍳", benar: "IBU MASAK NASI", opsi: ["IBU MASAK NASI", "SAYA TIDUR SIANG", "ADIK TENDANG BOLA"], audio: "../../../audio/roda_ibumasak.mp3" },
+        ],
+      };
+
+      let levelAktif = "dasar";
+      let itemPilihanKini = null;
+      let sedangBerputar = false;
+      let totalDerajatRotasi = 0;
+
+      function gantiLevelRoda(levelBaru) {
+        if (sedangBerputar) return;
+        levelAktif = levelBaru;
+        document.querySelectorAll(".btn-level-pilih").forEach((b) => b.classList.remove("active"));
+        document.querySelector(`.id-${levelBaru}`).classList.add("active");
+
+        resetPapanRodaAwal();
+      }
+
+      function resetPapanRodaAwal() {
+        document.getElementById("emojiRodaPusat").innerText = "❓";
+        document.getElementById("zonaOpsiPilihan").innerHTML = "";
+        document.getElementById("labelMisiRoda").innerText = "Klik tombol di atas untuk memulai putaran misteri!";
+        document.getElementById("btnPutar").disabled = false;
+        document.getElementById("btnPutar").style.opacity = "1";
+      }
+
+      function putarRodaSekarang() {
+        if (sedangBerputar) return;
+        sedangBerputar = true;
+        document.getElementById("btnPutar").disabled = true;
+        document.getElementById("btnPutar").style.opacity = "0.5";
+        document.getElementById("zonaOpsiPilihan").innerHTML = "";
+        document.getElementById("emojiRodaPusat").innerText = "🌀";
+
+        new Audio("../../../audio/wheel_spin.mp3").play().catch(() => {});
+
+        // Pilih soal acak dari database level aktif
+        const koleksi = databaseRoda[levelAktif];
+        itemPilihanKini = koleksi[Math.floor(Math.random() * koleksi.length)];
+
+        // Tambahkan putaran derajat roda acak yang besar agar visualnya mutar kencang
+        totalDerajatRotasi += 1800 + Math.floor(Math.random() * 360);
+        document.getElementById("rodaVisualElemen").style.transform = `rotate(${totalDerajatRotasi}deg)`;
+
+        // Berhenti setelah 3 detik animasi CSS selesai
+        setTimeout(() => {
+          sedangBerputar = false;
+          tampilkanHasilRoda();
+        }, 3000);
+      }
+
+      function tampilkanHasilRoda() {
+        new Audio("../../../audio/wheel_stop.mp3").play().catch(() => {});
+
+        // Tampilkan emoji target di tengah roda
+        document.getElementById("emojiRodaPusat").innerText = itemPilihanKini.emoji;
+        document.getElementById("labelMisiRoda").innerText = "Misi: Pilih tulisan kata/kalimat yang tepat untuk gambar di atas!";
+
+        // Tampilkan tombol pilihan opsi jawaban
+        const zonaOpsi = document.getElementById("zonaOpsiPilihan");
+        zonaOpsi.innerHTML = "";
+
+        itemPilihanKini.opsi.forEach((teksOpsi) => {
+          const btnOpsi = document.createElement("button");
+          btnOpsi.className = "btn-opsi-jawaban-roda";
+          btnOpsi.innerText = teksOpsi;
+          btnOpsi.onclick = () => verifikasiJawabanRoda(teksOpsi);
+          zonaOpsi.appendChild(btnOpsi);
+        });
+
+        putarSuaraMisi();
+      }
+
+      function verifikasiJawabanRoda(jawabanTerpilih) {
+        if (jawabanTerpilih === itemPilihanKini.benar) {
+          new Audio("../../../audio/menang.mp3").play().catch(() => {});
+          document.getElementById("popupMessage").innerHTML = `Luar biasa! Pilihanmu tepat:<br><b style="color:#2ecc71; font-size:1.7rem;">"${itemPilihanKini.benar}"</b>`;
+          document.getElementById("successPopup").style.display = "flex";
+        } else {
+          new Audio("../../../audio/salah.mp3").play().catch(() => {});
+          alert("❌ Pilihan kata belum pas dengan gambarnya. Yuk baca lagi pelan-pelan dan pilih jawaban yang lain!");
+        }
+      }
+
+      function putarSuaraMisi() {
+        if (itemPilihanKini && itemPilihanKini.audio) {
+          new Audio(itemPilihanKini.audio).play().catch(() => {});
+        }
+      }
+
+      function tutupDanResetRoda() {
+        document.getElementById("successPopup").style.display = "none";
+        resetPapanRodaAwal();
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        resetPapanRodaAwal();
+      });
+    </script>
+  </body>
+</html>

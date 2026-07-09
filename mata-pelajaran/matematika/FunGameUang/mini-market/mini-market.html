@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kasir Minimarket Indonesia Simulator - Edisi Inklusif SLB</title>
+
+    <!-- FONT & CSS BAWAAN BUVITA EDUPLAY -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../../../../style.css" />
+    <!-- Pastikan file style.css BuVita ada di folder yang sama -->
+
+    <!-- CSS KHUSUS SIMULATOR KASIR -->
+    <link rel="stylesheet" href="mini-market.css" />
+  </head>
+  <body class="halaman-game-kasir">
+    <!-- Kita beri class khusus pada body agar tidak merusak halaman web utama -->
+
+    <!-- NAVBAR UTAMA BUVITA EDUPLAY -->
+    <header class="main-header">
+      <div class="logo-area">
+        <img src="../../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="index.html" class="nav-item">HOME</a>
+        <a href="games.html" class="nav-item active">GAMES</a>
+        <!-- Kita buat GAMES yang active -->
+        <a href="kategori.html" class="nav-item">KATEGORI</a>
+        <a href="aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+      <div class="header-actions">
+        <button class="action-btn">🔍</button>
+        <button class="action-btn">🌐</button>
+      </div>
+    </header>
+
+    <!-- POPUP SELAMAT DATANG (WELCOME POPUP) -->
+    <div id="welcome-popup" class="popup-overlay">
+      <div class="popup-content">
+        <h2>Selamat Datang di<br />Minimarket Simulator!</h2>
+        <p>Yuk, belajar menjadi kasir hebat hari ini!</p>
+        <div class="popup-buttons">
+          <button id="btn-instruction" onclick="playInstruction()">🔊 Dengarkan Instruksi</button>
+          <button id="btn-start" onclick="startGame()">▶ LANGSUNG MAIN</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- POPUP KEBERHASILAN (SUCCESS POPUP) -->
+    <div id="success-popup" class="popup-overlay" style="display: none">
+      <div class="popup-content success-content">
+        <div class="success-icon">🎉</div>
+        <h2>HEBAT! SUKSES!</h2>
+        <p id="success-message">Kamu berhasil menghitung belanjaan senilai Rp 0</p>
+        <div class="popup-buttons">
+          <button id="btn-next-customer" onclick="closeSuccessPopup()">🛒 Pembeli Berikutnya</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTAINER UTAMA GAMEPLAY -->
+    <div class="game-container">
+      <div class="top-bar">
+        <div class="score-board">💰 Toko Kita: <span id="total-revenue">Rp 0</span></div>
+        <div class="level-board">👤 Pembeli Ke: <span id="customer-count">1</span></div>
+      </div>
+
+      <div class="shop-area" id="shop-bg" style="background-image: url(&quot;assets/bg-minimarket.jpg&quot;)">
+        <img src="assets/pembeli-1.png" alt="Pembeli" class="customer-img" id="customer-sprite" />
+        <div class="item-bubble">
+          <div class="price-tag" id="item-price-tag">Rp 0</div>
+          <img src="assets/barang-mie.png" alt="Barang" class="item-img" id="item-sprite" />
+        </div>
+        <div class="instruction-box" onclick="replayCurrentPrompt()" title="Klik untuk dengar suara bantuan" style="cursor: pointer">
+          <p><span id="instruction-text">Memuat game...</span> <span style="font-size: 18px; margin-left: 5px">🔊</span></p>
+        </div>
+      </div>
+
+      <div class="pos-terminal">
+        <div class="screen-container">
+          <div class="receipt-screen">
+            <div class="receipt-header">📝 STRUK BELANJA</div>
+            <ul id="receipt-list"></ul>
+            <div class="receipt-total">TOTAL: <span id="receipt-total-price">Rp 0</span></div>
+          </div>
+
+          <div class="numpad-screen">
+            <div class="numpad-display" id="calc-display">0</div>
+            <div class="numpad-grid">
+              <button class="btn-num" onclick="inputNumber('7')">7</button>
+              <button class="btn-num" onclick="inputNumber('8')">8</button>
+              <button class="btn-num" onclick="inputNumber('9')">9</button>
+              <button class="btn-orange btn-action" onclick="actionAdd()">➕ TAMBAH</button>
+
+              <button class="btn-num" onclick="inputNumber('4')">4</button>
+              <button class="btn-num" onclick="inputNumber('5')">5</button>
+              <button class="btn-num" onclick="inputNumber('6')">6</button>
+              <button class="btn-orange btn-action" onclick="actionClear()">🔄 RESET</button>
+
+              <button class="btn-num" onclick="inputNumber('1')">1</button>
+              <button class="btn-num" onclick="inputNumber('2')">2</button>
+              <button class="btn-num" onclick="inputNumber('3')">3</button>
+              <button class="btn-blue btn-action" onclick="actionTotal()">📊 TOTAL</button>
+
+              <button class="btn-num" onclick="inputNumber('0')">0</button>
+              <button class="btn-num" onclick="inputNumber('00')">00</button>
+              <button class="btn-red btn-action" onclick="actionDelete()">❌ HAPUS</button>
+              <button class="btn-green btn-action" onclick="actionPay()">✅ BAYAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASSET AUDIO -->
+    <audio id="audio-beep" src="assets/audio-beep.mp3" preload="auto"></audio>
+    <audio id="audio-cash" src="assets/audio-cash.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="assets/audio-wrong.mp3" preload="auto"></audio>
+    <audio id="audio-instruction" src="assets/audio-instruksi.mp3" preload="auto"></audio>
+    <audio id="prompt-input" src="assets/audio-prompt-input.mp3" preload="auto"></audio>
+    <audio id="prompt-total" src="assets/audio-prompt-total.mp3" preload="auto"></audio>
+    <audio id="prompt-bayar" src="assets/audio-prompt-bayar.mp3" preload="auto"></audio>
+
+    <script src="mini-market.js"></script>
+  </body>
+</html>

@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matematika Lanjutan: Cukup atau Kurang? - BuVita EduPlay</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        background-color: #121214;
+        background-image: radial-gradient(#252529 15%, transparent 16%);
+        background-size: 20px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        user-select: none;
+        font-family: "Nunito", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .game-container {
+        width: 100%;
+        max-width: 950px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Header Utama */
+      .cukup-header {
+        background: linear-gradient(135deg, #9b59b6, #34495e);
+        color: white;
+        padding: 15px 35px;
+        border-radius: 20px;
+        border: 4px solid black;
+        box-shadow: 6px 6px 0px black;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+        text-align: center;
+        width: 100%;
+        cursor: pointer;
+      }
+
+      /* LAYOUT UTAMA BELAH DUA */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        width: 100%;
+        margin-bottom: 30px;
+      }
+      @media (max-width: 768px) {
+        .dashboard-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Panel Kiri & Kanan */
+      .dash-card {
+        background-color: #1c1b22;
+        border: 4px solid black;
+        border-radius: 24px;
+        padding: 25px;
+        box-shadow: 6px 6px 0px black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+      }
+      .card-dompet {
+        border-color: #f1c40f;
+        box-shadow: 6px 6px 0px #f1c40f;
+      }
+      .card-menu {
+        border-color: #e67e22;
+        box-shadow: 6px 6px 0px #e67e22;
+      }
+
+      .card-title-tag {
+        position: absolute;
+        top: -15px;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 5px 20px;
+        border-radius: 30px;
+        border: 3px solid black;
+        font-size: 0.9rem;
+      }
+
+      /* Area Isi Uang di Dompet */
+      .dompet-isi-wadah {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        min-height: 120px;
+        margin: 20px 0;
+        background-color: #131217;
+        border-radius: 16px;
+        width: 100%;
+        padding: 15px;
+        border: 2px dashed #444;
+      }
+      .uang-dompet-img {
+        width: 110px;
+        border: 2px solid black;
+        border-radius: 6px;
+        box-shadow: 3px 3px 0px black;
+        animation: floatUang 3s ease-in-out infinite alternate;
+      }
+
+      .total-dompet-text {
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.4rem;
+        color: #f1c40f;
+        background-color: #2c2510;
+        padding: 6px 20px;
+        border-radius: 30px;
+        border: 2px solid #f1c40f;
+      }
+
+      /* Area Makanan */
+      .menu-emoji {
+        font-size: 5.5rem;
+        margin: 15px 0;
+        filter: drop-shadow(0px 8px 0px rgba(0, 0, 0, 0.5));
+      }
+      .menu-harga-tag {
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.5rem;
+        color: white;
+        background-color: #e74c3c;
+        padding: 8px 25px;
+        border-radius: 16px;
+        border: 3px solid black;
+        box-shadow: 4px 4px 0px black;
+      }
+
+      /* PANEL TOMBOL JAWABAN BESAR (JUARA!) */
+      .decision-zone {
+        width: 100%;
+        display: flex;
+        gap: 25px;
+        margin-bottom: 25px;
+      }
+      @media (max-width: 500px) {
+        .decision-zone {
+          flex-direction: column;
+        }
+      }
+
+      .btn-decision {
+        flex: 1;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.5rem;
+        padding: 20px;
+        border: 4px solid black;
+        border-radius: 20px;
+        cursor: pointer;
+        color: white;
+        box-shadow: 0px 8px 0px black;
+        transition: 0.1s;
+        text-align: center;
+      }
+      .btn-decision:active {
+        transform: translateY(6px);
+        box-shadow: 0px 2px 0px black;
+      }
+      .btn-cukup {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+      }
+      .btn-cukup:hover {
+        box-shadow:
+          0px 8px 0px #27ae60,
+          0 0 15px rgba(46, 204, 113, 0.4);
+      }
+
+      .btn-kurang {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+      }
+      .btn-kurang:hover {
+        box-shadow:
+          0px 8px 0px #c0392b,
+          0 0 15px rgba(231, 76, 60, 0.4);
+      }
+
+      /* Animasi */
+      @keyframes floatUang {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-8px);
+        }
+      }
+      @keyframes shakePop {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-10px);
+        }
+        40%,
+        80% {
+          transform: translateX(10px);
+        }
+      }
+
+      /* Pop-up Global */
+      .popup-overlay-global {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+      .popup-content-box {
+        background-color: #1c1b22;
+        border: 4px solid #2ecc71;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0px 0px 30px rgba(46, 204, 113, 0.3);
+      }
+      .popup-icon-circle {
+        font-size: 5rem;
+        margin-bottom: 20px;
+      }
+      .popup-title {
+        font-family: "Fredoka One", sans-serif;
+        color: #2ecc71;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+      .popup-text {
+        font-family: "Nunito", sans-serif;
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        line-height: 1.4;
+      }
+      .popup-btn-next {
+        background-color: #f1b811;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 30px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 15px;
+        box-shadow: 5px 5px 0px black;
+        cursor: pointer;
+      }
+
+      /* Styling Tombol Navigasi Bawah */
+      .navigasi-level-box {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 900px;
+        margin-top: 40px;
+        margin-bottom: 20px;
+        gap: 20px;
+      }
+
+      .btn-nav-level {
+        flex: 1;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.1rem;
+        padding: 15px 20px;
+        border: 3px solid black;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 4px 4px 0px black;
+        transition:
+          transform 0.1s,
+          box-shadow 0.1s;
+        color: white;
+      }
+
+      .btn-nav-level:active {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0px black;
+      }
+
+      /* Warna Tombol Back (Merah Tua/Retro) */
+      .btn-nav-level.btn-back {
+        background-color: #95a5a6;
+        color: black;
+      }
+      .btn-nav-level.btn-back:hover {
+        background-color: #bdc3c7;
+      }
+
+      /* Warna Tombol Next (Biru/Ungu Retro) */
+      .btn-nav-level.btn-next {
+        background-color: #9b59b6;
+      }
+      .btn-nav-level.btn-next:hover {
+        background-color: #8e44ad;
+      }
+
+      @media (max-width: 480px) {
+        .navigasi-level-box {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+      <nav class="nav-menu">
+        <a href="../../../index.html" class="nav-item">HOME</a>
+        <a href="../../../games.html" class="nav-item active">GAMES</a>
+        <a href="../../../kategori.html" class="nav-item">KATEGORI</a>
+        <a href="../../../aboutUs.html" class="nav-item">TENTANG KAMI</a>
+      </nav>
+    </header>
+
+    <div class="game-container">
+      <div class="cukup-header" id="instruksiSuaraBtn" onclick="putarSuaraSoal()">👛 Logika Kantong Belanja: Cukup atau Kurang? 🔊</div>
+
+      <div class="dashboard-grid">
+        <div class="dash-card card-dompet">
+          <div class="card-title-tag" style="background-color: #f1c40f">👛 ISI DOMPETMU</div>
+          <div class="dompet-isi-wadah" id="wadahUangDompet"></div>
+          <div class="total-dompet-text" id="txtTotalDompet">Total: Rp 0</div>
+        </div>
+
+        <div class="dash-card card-menu">
+          <div class="card-title-tag" style="background-color: #e67e22; color: white">🍔 MAKANAN IMPIAN</div>
+          <div class="menu-emoji" id="txtMenuEmoji">🍔</div>
+          <h3 style="font-family: &quot;Fredoka One&quot;; color: white; margin-bottom: 15px" id="txtMenuNama">Loading...</h3>
+          <div class="menu-harga-tag" id="txtMenuHarga">Rp 0</div>
+        </div>
+      </div>
+
+      <div class="decision-zone">
+        <button class="btn-decision btn-cukup" onclick="jawabLogika('cukup')">🟢 CUKUP <br /><span style="font-size: 0.9rem; font-family: &quot;Nunito&quot;">Uangku Bisa Pas/Lebih</span></button>
+        <button class="btn-decision btn-kurang" onclick="jawabLogika('kurang')">🔴 KURANG <br /><span style="font-size: 0.9rem; font-family: &quot;Nunito&quot;">Uangku Tidak Cukup</span></button>
+      </div>
+
+      <div class="rak-koleksi-box" style="background-color: #1c1b22; border: 3px solid black; padding: 15px; border-radius: 16px; width: 100%; text-align: center; color: white; font-family: &quot;Fredoka One&quot;">
+        ⭐ Jawaban Tepat Beruntun: <span style="color: #2ecc71" id="txtSkor">0</span> Soal
+      </div>
+
+      <div class="navigasi-level-box" style="margin-top: 30px">
+        <button class="btn-nav-level btn-back" onclick="navigasiKembali()">⬅️ GAME SEBELUMNYA</button>
+        <button class="btn-nav-level btn-next" onclick="navigasiLanjut()">LEWATKAN GAME ➡️</button>
+      </div>
+
+      <div id="successPopup" class="popup-overlay-global">
+        <div class="popup-content-box">
+          <div class="popup-icon-circle">🎉</div>
+          <h2 class="popup-title">HEBAT & TEPAT!</h2>
+          <p id="popupMessageBenar" class="popup-text"></p>
+          <button class="popup-btn-next" onclick="tutupDanLanjutSoal()">SOAL SELANJUTNYA ✨</button>
+        </div>
+      </div>
+
+      <div id="failedPopup" class="popup-overlay-global">
+        <div class="popup-content-box" style="border-color: #e74c3c; box-shadow: 0px 0px 30px rgba(231, 76, 60, 0.3)">
+          <div class="popup-icon-circle" style="animation: shakePop 0.5s ease-in-out">❌</div>
+          <h2 class="popup-title" style="color: #e74c3c">IKUTI ANGKA</h2>
+          <p id="popupMessageSalah" class="popup-text"></p>
+          <button class="popup-btn-next" onclick="tutupDanUlangiSoal()">Coba Hitung Lagi</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const masterGambarUang = {
+        1000: "../assets/uang1000.png",
+        2000: "../assets/uang2000.png",
+        5000: "../assets/uang5000.png",
+        10000: "../assets/uang10000.png",
+        20000: "../assets/uang20000.png",
+      };
+
+      // Database Soal Variasi Kombinasi Dompet vs Harga Menu
+      const daftarSoalLogika = [
+        { nama: "Burger Lezat", emoji: "🍔", harga: 15000, dompet: [10000, 5000], jawabanBenar: "cukup", audio: "../../../audio/cukup_burger.mp3" },
+        { nama: "Es Krim Cone", emoji: "🍦", harga: 7000, dompet: [5000, 1000], jawabanBenar: "kurang", audio: "../../../audio/cukup_eskrim.mp3" },
+        { nama: "Paket Donat", emoji: "🍩", harga: 12000, dompet: [10000, 2000], jawabanBenar: "cukup", audio: "../../../audio/cukup_donat.mp3" },
+        { nama: "Pizza Mini", emoji: "🍕", harga: 18000, dompet: [10000, 5000, 2000], jawabanBenar: "kurang", audio: "../../../audio/cukup_pizza.mp3" },
+        { nama: "Susu Botol", emoji: "🍼", harga: 6000, dompet: [5000, 2000], jawabanBenar: "cukup", audio: "../../../audio/cukup_susu.mp3" },
+      ];
+
+      let soalSekarang = null;
+      let skorSiswa = 0;
+      let totalUangDompet = 0;
+
+      function mulaiGameLogika() {
+        const acak = Math.floor(Math.random() * daftarSoalLogika.length);
+        soalSekarang = daftarSoalLogika[acak];
+
+        // Hitung total uang di dompet soal
+        totalUangDompet = soalSekarang.dompet.reduce((a, b) => a + b, 0);
+        document.getElementById("txtTotalDompet").innerText = "Total: Rp " + totalUangDompet.toLocaleString("id-ID");
+
+        // Render Gambar Uang di Dompet
+        const wadahDompet = document.getElementById("wadahUangDompet");
+        wadahDompet.innerHTML = "";
+        soalSekarang.dompet.forEach((nominal, index) => {
+          const img = document.createElement("img");
+          img.className = "uang-dompet-img";
+          img.src = masterGambarUang[nominal];
+          img.style.animationDelay = index * 0.2 + "s";
+          wadahDompet.appendChild(img);
+        });
+
+        // Render Info Menu Target
+        document.getElementById("txtMenuEmoji").innerText = soalSekarang.emoji;
+        document.getElementById("txtMenuNama").innerText = soalSekarang.nama;
+        document.getElementById("txtMenuHarga").innerText = "Harga: Rp " + soalSekarang.harga.toLocaleString("id-ID");
+
+        putarSuaraSoal();
+      }
+
+      function putarSuaraSoal() {
+        if (soalSekarang && soalSekarang.audio) {
+          let audio = new Audio(soalSekarang.audio);
+          audio.play().catch((e) => console.log("Audio belum siap"));
+        }
+      }
+
+      function jawabLogika(pilihanSiswa) {
+        if (pilihanSiswa === soalSekarang.jawabanBenar) {
+          let audioBenar = new Audio("../../../audio/menang.mp3");
+          audioBenar.play().catch((e) => {});
+
+          skorSiswa++;
+          document.getElementById("txtSkor").innerText = skorSiswa;
+
+          if (soalSekarang.jawabanBenar === "cukup") {
+            tampilkanPopUpBerhasil(
+              `🎉 Benar sekali! Uang di dompetmu (<b>Rp ${totalUangDompet.toLocaleString("id-ID")}</b>) CUKUP dan PAS untuk membeli ${soalSekarang.nama} seharga <b>Rp ${soalSekarang.harga.toLocaleString("id-ID")}</b>!`,
+            );
+          } else {
+            tampilkanPopUpBerhasil(
+              `🎉 Jawabanmu Cerdas! Uang di dompetmu (<b>Rp ${totalUangDompet.toLocaleString("id-ID")}</b>) memang KURANG untuk membeli ${soalSekarang.nama} seharga <b>Rp ${soalSekarang.harga.toLocaleString("id-ID")}</b>. Kita harus cari menu lain!`,
+            );
+          }
+        } else {
+          let audioSalah = new Audio("../../../audio/salah.mp3");
+          audioSalah.play().catch((e) => {});
+
+          if (soalSekarang.jawabanBenar === "cukup") {
+            tampilkanPopUpGagal(`⚠️ Uang di dompetmu sebenarnya <b>Cukup</b> kok.<br><br>Coba hitung gabungan nilai uang lembaranmu lagi, ya!`);
+          } else {
+            tampilkanPopUpGagal(`⚠️ Uang di dompetmu <b>Tidak Cukup</b> untuk membeli barang itu.<br><br>Ayo perhatikan angka harganya yang lebih besar dari isi dompet!`);
+          }
+        }
+      }
+
+      function tampilkanPopUpBerhasil(pesan) {
+        document.getElementById("popupMessageBenar").innerHTML = pesan;
+        document.getElementById("successPopup").style.display = "flex";
+      }
+
+      function tampilkanPopUpGagal(pesan) {
+        document.getElementById("popupMessageSalah").innerHTML = pesan;
+        document.getElementById("failedPopup").style.display = "flex";
+      }
+
+      function tutupDanLanjutSoal() {
+        document.getElementById("successPopup").style.display = "none";
+        mulaiGameLogika();
+      }
+
+      function tutupDanUlangiSoal() {
+        document.getElementById("failedPopup").style.display = "none";
+      }
+
+      function navigasiLanjut() {
+        alert("🎉 Luar biasa! Kamu telah menuntaskan seluruh paket kurikulum Matematika Keuangan Tingkat Lanjutan BuVita EduPlay!");
+        window.location.href = "../../../index.html";
+      }
+
+      function navigasiKembali() {
+        window.location.href = "BerburuDiskon.html";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        mulaiGameLogika();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Puzzle Uang Level 3 - BuVita EduPlay</title>
+    <link rel="stylesheet" href="../../../style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet" />
+
+    <style>
+      body {
+        background-image: radial-gradient(#333333 15%, transparent 16%);
+        background-size: 16px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: "Nunito", sans-serif;
+      }
+
+      .game-container {
+        width: 100%;
+        max-width: 900px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header {
+        background-color: #9b59b6;
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        border: 3px solid black;
+        box-shadow: 5px 5px 0px black;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 2rem;
+        margin-bottom: 25px;
+        text-align: center;
+        width: 100%;
+        text-transform: uppercase;
+      }
+
+      /* AREA CELENGAN */
+      .celengan-zone {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-bottom: 40px;
+        width: 100%;
+      }
+
+      .celengan-box {
+        width: 150px;
+        height: 180px;
+        background-color: #34495e;
+        border: 4px solid black;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+        padding-bottom: 20px;
+        box-shadow: 6px 6px 0px black;
+        transition: transform 0.2s;
+      }
+
+      .celengan-box.drag-over {
+        transform: scale(1.1);
+        background-color: #8e44ad;
+      }
+
+      .label-celengan {
+        position: absolute;
+        top: -15px;
+        background-color: #f1b811;
+        padding: 5px 15px;
+        border: 2px solid black;
+        border-radius: 20px;
+        font-family: "Fredoka One", sans-serif;
+        font-size: 1.1rem;
+      }
+
+      /* AREA KOIN YANG AKAN DI-DRAG */
+      .coin-pool-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 30px;
+        background-color: #1e1e1e;
+        border: 3px solid black;
+        border-radius: 15px;
+        min-height: 120px;
+        width: 100%;
+      }
+
+      .coin-item {
+        width: 80px;
+        height: 80px;
+        cursor: grab;
+        transition: transform 0.2s;
+      }
+
+      .coin-item:active {
+        cursor: grabbing;
+        transform: scale(1.1);
+      }
+
+      /* POPUP GLOBAL */
+      .popup-overlay-global {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .popup-content-box {
+        background-color: #1e1e1e;
+        border: 4px solid #9b59b6;
+        border-radius: 24px;
+        padding: 40px;
+        text-align: center;
+        max-width: 450px;
+        width: 90%;
+        box-shadow: 0px 0px 30px rgba(155, 89, 182, 0.3);
+      }
+
+      .popup-title {
+        font-family: "Fredoka One", sans-serif;
+        color: #9b59b6;
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+      }
+
+      .popup-text {
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+      }
+
+      .popup-btn-next {
+        background-color: #f1b811;
+        color: black;
+        font-family: "Fredoka One", sans-serif;
+        padding: 15px 30px;
+        font-size: 1.3rem;
+        border: 3px solid black;
+        border-radius: 15px;
+        box-shadow: 5px 5px 0px black;
+        cursor: pointer;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header" style="width: 100%">
+      <div class="logo-area">
+        <img src="../../../assets/LogoFull.png" class="logo-icon" alt="BuVita Logo" />
+        <span class="logo-text"><span class="text-white">BuVita</span> <span class="text-yellow">EduPlay</span></span>
+      </div>
+    </header>
+
+    <div class="game-container">
+      <div class="header">💰 LEVEL 3: PILAH KOIN CELENGAN</div>
+
+      <div class="celengan-zone" id="celenganZone">
+        <!-- Celengan akan di-generate via JS -->
+      </div>
+
+      <div class="coin-pool-container" id="coinPool">
+        <!-- Koin acak akan di-generate via JS -->
+      </div>
+
+      <!-- WELCOME POPUP -->
+      <div id="welcomePopup" class="popup-overlay-global" style="display: flex">
+        <div class="popup-content-box" style="border-color: #9b59b6">
+          <div style="font-size: 4rem; margin-bottom: 10px">🐷</div>
+          <h2 class="popup-title">Ayo Menabung Koin!</h2>
+          <p class="popup-text">Wah, koin-koin ini berserakan! Yuk bantu BuVita memasukkan koin ke celengan yang nominalnya sesuai!</p>
+          <button class="popup-btn-next" style="background-color: #9b59b6; color: white" onclick="dengarPetunjukAwal()">🔊 DENGAR PETUNJUK</button>
+          <button class="popup-btn-next" style="background-color: #2ecc71; color: white; border-color: #27ae60; margin-top: 10px" onclick="mulaiGame()">MAIN SEKARANG ➡️</button>
+        </div>
+      </div>
+
+      <!-- POPUP KEMENANGAN TOTAL -->
+      <div id="successPopup" class="popup-overlay-global">
+        <div class="popup-content-box" style="border-color: #2ecc71">
+          <div style="font-size: 5rem; margin-bottom: 20px">🏆</div>
+          <h2 class="popup-title" style="color: #2ecc71">LUAR BIASA HEBAT!</h2>
+          <p class="popup-text">Kamu telah berhasil menyelesaikan semua level puzzle uang dengan sempurna! Kamu sudah jadi ahli uang Rupiah!</p>
+          <button class="popup-btn-next" style="background-color: #f1b811" onclick="kembaliKeMenu()">KEMBALI KE MENU UTAMA</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let audioMisi = null;
+      let audioInstruksiAwal = new Audio("../audio/instruksi_puzzle3.mp3");
+      let totalKoinTersortir = 0;
+      let draggedCoinType = null;
+
+      // Konfigurasi Koin dan Celengan
+      const dataCelengan = [
+        { id: "celengan-5000", nominal: 5000, label: "Rp 5000", img: "../../../assets/tabungan.png" },
+        { id: "celengan-1000", nominal: 1000, label: "Rp 1.000", img: "../../../assets/tabungan.png" },
+      ];
+
+      const dataKoin = [
+        { type: "celengan-5000", img: "../assets/uang5000.png", suara: "../audio/5000.mp3" },
+        { type: "celengan-1000", img: "../assets/uang1000.png", suara: "../audio/1000.mp3" },
+      ];
+
+      function playSuara(path) {
+        if (audioMisi) {
+          audioMisi.pause();
+          audioMisi.currentTime = 0;
+        }
+        audioMisi = new Audio(path);
+        audioMisi.play().catch((e) => console.log("Audio diblokir browser"));
+      }
+
+      function dengarPetunjukAwal() {
+        audioInstruksiAwal.play().catch((e) => console.log("Interaksi user diperlukan"));
+      }
+
+      function mulaiGame() {
+        document.getElementById("welcomePopup").style.display = "none";
+        audioInstruksiAwal.pause();
+        audioInstruksiAwal.currentTime = 0;
+
+        setupCelengan();
+        generateKoinAcak(8); // Generate 8 koin secara random
+      }
+
+      function setupCelengan() {
+        const zone = document.getElementById("celenganZone");
+        zone.innerHTML = "";
+        dataCelengan.forEach((c) => {
+          const div = document.createElement("div");
+          div.className = "celengan-box";
+          div.id = c.id;
+          div.innerHTML = `<div class="label-celengan">${c.label}</div><img src="${c.img}" style="width:100px;">`;
+
+          div.addEventListener("dragover", (e) => e.preventDefault());
+          div.addEventListener("dragenter", (e) => e.currentTarget.classList.add("drag-over"));
+          div.addEventListener("dragleave", (e) => e.currentTarget.classList.remove("drag-over"));
+          div.addEventListener("drop", handleDropKoin);
+
+          zone.appendChild(div);
+        });
+      }
+
+      function generateKoinAcak(jumlah) {
+        const pool = document.getElementById("coinPool");
+        pool.innerHTML = "";
+        for (let i = 0; i < jumlah; i++) {
+          const rand = dataKoin[Math.floor(Math.random() * dataKoin.length)];
+          const coin = document.createElement("img");
+          coin.src = rand.img;
+          coin.className = "coin-item";
+          coin.dataset.type = rand.type;
+          coin.dataset.suara = rand.suara;
+          coin.draggable = true;
+          coin.addEventListener("dragstart", (e) => {
+            draggedCoinType = e.target.dataset.type;
+            playSuara(e.target.dataset.suara);
+          });
+          pool.appendChild(coin);
+        }
+      }
+
+      function handleDropKoin(e) {
+        e.preventDefault();
+        const celengan = e.currentTarget;
+        celengan.classList.remove("drag-over");
+
+        if (celengan.id === draggedCoinType) {
+          playSuara("../audio/klik_pas.mp3");
+          totalKoinTersortir++;
+
+          // Hapus koin yang di-drag dari pool
+          document.querySelector(`[data-type="${draggedCoinType}"][draggable="true"]`).remove();
+
+          if (document.getElementById("coinPool").children.length === 0) {
+            setTimeout(() => {
+              playSuara("../audio/menang.mp3");
+              document.getElementById("successPopup").style.display = "flex";
+            }, 500);
+          }
+        } else {
+          playSuara("../audio/salah.mp3");
+        }
+      }
+
+      function kembaliKeMenu() {
+        window.location.href = "index.html";
+      }
+    </script>
+  </body>
+</html>
