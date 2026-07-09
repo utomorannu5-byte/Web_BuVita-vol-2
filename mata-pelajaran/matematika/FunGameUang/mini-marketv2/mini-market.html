@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kasir Minimarket Indonesia Simulator - Edisi Inklusif SLB</title>
+    <!-- File CSS eksternal disesuaikan namanya dengan deklarasi sistem -->
+    <link rel="stylesheet" href="mini-market.css" />
+  </head>
+  <body>
+    <!-- POPUP SELAMAT DATANG (WELCOME POPUP) -->
+    <div id="welcome-popup" class="popup-overlay">
+      <div class="popup-content">
+        <h2>
+          Selamat Datang di<br />🏵️BuVita🏵️<br />
+          Minimarket Simulator!
+        </h2>
+        <p>Yuk, belajar menjadi kasir hebat hari ini!</p>
+
+        <div class="popup-buttons">
+          <!-- Tombol Instruksi: Memicu audio panduan awal -->
+          <button id="btn-instruction" onclick="playInstruction()">🔊 Dengarkan Instruksi</button>
+          <!-- Tombol Mulai: Membuka kunci permainan -->
+          <button id="btn-start" onclick="startGame()">▶ LANGSUNG MAIN</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- POPUP KEBERHASILAN (SUCCESS POPUP) -->
+    <div id="success-popup" class="popup-overlay" style="display: none">
+      <div class="popup-content success-content">
+        <div class="success-icon">🎉</div>
+        <h2>HEBAT! SUKSES!</h2>
+        <p id="success-message">Kamu berhasil menghitung belanjaan senilai Rp 0</p>
+
+        <div class="popup-buttons">
+          <!-- Tombol Melanjutkan Game -->
+          <button id="btn-next-customer" onclick="closeSuccessPopup()">🛒 Pembeli Berikutnya</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTAINER UTAMA GAMEPLAY -->
+    <div class="game-container">
+      <!-- AREA ATAS: Informasi Pendapatan & Jumlah Pelanggan -->
+      <div class="top-bar">
+        <div class="score-board">💰 Toko BuVita: <span id="total-revenue">Rp 0</span></div>
+        <div class="level-board">👤 Pembeli Ke: <span id="customer-count">1</span></div>
+      </div>
+
+      <!-- AREA UTAMA VISUAL: Latar Belakang Toko & Karakter -->
+      <div class="shop-area" id="shop-bg" style="background-image: url(&quot;assets/bg-minimarket.jpg&quot;)">
+        <!-- Gambar Pembeli dengan Efek Bayangan -->
+        <img src="assets/pembeli-1.png" alt="Pembeli" class="customer-img" id="customer-sprite" />
+
+        <!-- Gelembung Display Barang Aktif -->
+        <div class="item-bubble">
+          <div class="price-tag" id="item-price-tag">Rp 0</div>
+          <img src="assets/barang-mie.png" alt="Barang" class="item-img" id="item-sprite" />
+        </div>
+
+        <!-- Kotak Box Teks Instruksi Sederhana -->
+        <div class="instruction-box" onclick="replayCurrentPrompt()" title="Klik untuk dengar suara bantuan" style="cursor: pointer">
+          <p><span id="instruction-text">Memuat game...</span> <span style="font-size: 18px; margin-left: 5px">🔊</span></p>
+        </div>
+      </div>
+
+      <!-- AREA BAWAH: Antarmuka Mesin Kasir / Tablet POS -->
+      <div class="pos-terminal">
+        <div class="screen-container">
+          <!-- SISI KIRI: Struk Belanjaan Visual -->
+          <div class="receipt-screen">
+            <div class="receipt-header">📝 STRUK BELANJA</div>
+            <ul id="receipt-list">
+              <!-- Daftar item masuk secara dinamis dari JS -->
+            </ul>
+            <div class="receipt-total">TOTAL: <span id="receipt-total-price">Rp 0</span></div>
+          </div>
+
+          <!-- SISI KANAN: Papan Ketik Angka (Numpad Jelas & Ramah Motorik) -->
+          <div class="numpad-screen">
+            <!-- Monitor Kecil Nilai Input Saat Ini -->
+            <div class="numpad-display" id="calc-display">0</div>
+
+            <!-- Tata Letak Tombol Grid -->
+            <div class="numpad-grid">
+              <button class="btn-num" onclick="inputNumber('7')">7</button>
+              <button class="btn-num" onclick="inputNumber('8')">8</button>
+              <button class="btn-num" onclick="inputNumber('9')">9</button>
+              <button class="btn-orange btn-action" onclick="actionAdd()">➕ TAMBAH</button>
+
+              <button class="btn-num" onclick="inputNumber('4')">4</button>
+              <button class="btn-num" onclick="inputNumber('5')">5</button>
+              <button class="btn-num" onclick="inputNumber('6')">6</button>
+              <button class="btn-orange btn-action" onclick="actionClear()">🔄 RESET</button>
+
+              <button class="btn-num" onclick="inputNumber('1')">1</button>
+              <button class="btn-num" onclick="inputNumber('2')">2</button>
+              <button class="btn-num" onclick="inputNumber('3')">3</button>
+              <button class="btn-blue btn-action" onclick="actionTotal()">📊 TOTAL</button>
+
+              <button class="btn-num" onclick="inputNumber('0')">0</button>
+              <button class="btn-num" onclick="inputNumber('00')">00</button>
+              <button class="btn-red btn-action" onclick="actionDelete()">❌ HAPUS</button>
+              <button class="btn-green btn-action" onclick="actionPay()">✅ BAYAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PENGATURAN ASSET AUDIO -->
+    <!-- Efek Suara Standar -->
+    <audio id="audio-beep" src="assets/audio-beep.mp3" preload="auto"></audio>
+    <audio id="audio-cash" src="assets/audio-cash.mp3" preload="auto"></audio>
+    <audio id="audio-wrong" src="assets/audio-wrong.mp3" preload="auto"></audio>
+
+    <!-- Audio Prompts Mekanisme (Suara Arahan Kasir untuk Aspek SLB) -->
+    <audio id="audio-instruction" src="assets/audio-instruksi.mp3" preload="auto"></audio>
+    <audio id="prompt-input" src="assets/audio-prompt-input.mp3" preload="auto"></audio>
+    <audio id="prompt-total" src="assets/audio-prompt-total.mp3" preload="auto"></audio>
+    <audio id="prompt-bayar" src="assets/audio-prompt-bayar.mp3" preload="auto"></audio>
+
+    <!-- Memanggil Logika Game -->
+    <script src="mini-market.js"></script>
+  </body>
+</html>

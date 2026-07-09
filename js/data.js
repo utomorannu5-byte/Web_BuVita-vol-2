@@ -16,8 +16,7 @@ const buvitaDatabase = {
   matematika: [
     {
       tema: "Mengenal Uang Rupiah",
-      deskripsi:
-        "Belajar mengenal nilai pecahan uang kertas Rupiah melalui stimulus suara dan visual interaktif.",
+      deskripsi: "Belajar mengenal nilai pecahan uang kertas Rupiah melalui stimulus suara dan visual interaktif.",
       badgeClass: "badge-matematika",
       badgeText: "Matematika",
       levels: [
@@ -30,16 +29,100 @@ const buvitaDatabase = {
           url: "mata-pelajaran/matematika/tema-mengenal-uang-menengah/KiosJajanan.html",
         },
         {
-          name: "🟠 Lanjutan (Segera Hadir!)",
+          name: "🟠 Lanjutan (Menghitung Uang Kembalian)",
           url: "mata-pelajaran/matematika/tema-mengenal-uang-lanjutan/index.html",
         },
       ],
     },
   ],
-  bahasa: [],
-  umum: [],
-  ipa: [],
-  seni: [],
+  bahasa: [
+    {
+      tema: "Mengenal Huruf",
+      deskripsi: "Belajar mengenal huruf abjad melalui stimulus suara dan visual interaktif.",
+      badgeClass: "badge-bahasa",
+      badgeText: "Bahasa",
+      levels: [
+        {
+          name: "🟢 Dasar (Mengenal Benda Sekolah)",
+          url: "mata-pelajaran/bahasa/tema-tebak-kata/cocokGambar.html",
+        },
+        {
+          name: "🟡 Menengah (Segera Hadir!)",
+          url: "mata-pelajaran/bahasa/tema-mengenal-huruf-menengah/KiosJajanan.html",
+        },
+        {
+          name: "🟠 Lanjutan (Segera Hadir!)",
+          url: "mata-pelajaran/bahasa/tema-mengenal-huruf-lanjutan/index.html",
+        },
+      ],
+    },
+  ],
+  umum: [
+    {
+      tema: "Mengenal Benda dan Lingkungan",
+      deskripsi: "Belajar mengenal benda dan lingkungan sekitar melalui stimulus suara dan visual interaktif.",
+      badgeClass: "badge-umum",
+      badgeText: "Pengetahuan Umum",
+      levels: [
+        {
+          name: "🟢 Dasar (Segera Hadir!)",
+          url: "mata-pelajaran/umum/tema-mengenal-benda-dan-lingkungan-dasar/MengenalBenda.html",
+        },
+        {
+          name: "🟡 Menengah (Segera Hadir!)",
+          url: "mata-pelajaran/umum/tema-mengenal-benda-dan-lingkungan-menengah/KiosJajanan.html",
+        },
+        {
+          name: "🟠 Lanjutan (Segera Hadir!)",
+          url: "mata-pelajaran/umum/tema-mengenal-benda-dan-lingkungan-lanjutan/index.html",
+        },
+      ],
+    },
+  ],
+  ipa: [
+    {
+      tema: "Mengenal Hewan dan Tumbuhan",
+      deskripsi: "Belajar mengenal hewan dan tumbuhan melalui stimulus suara dan visual interaktif.",
+      badgeClass: "badge-ipa",
+      badgeText: "IPA",
+      levels: [
+        {
+          name: "🟢 Dasar (Segera Hadir!)",
+          url: "mata-pelajaran/ipa/tema-mengenal-hewan-dan-tumbuhan-dasar/MengenalHewan.html",
+        },
+        {
+          name: "🟡 Menengah (Segera Hadir!)",
+          url: "mata-pelajaran/ipa/tema-mengenal-hewan-dan-tumbuhan-menengah/KiosJajanan.html",
+        },
+        {
+          name: "🟠 Lanjutan (Segera Hadir!)",
+          url: "mata-pelajaran/ipa/tema-mengenal-hewan-dan-tumbuhan-lanjutan/index.html",
+        },
+      ],
+    },
+  ],
+  seni: [
+    {
+      tema: "Mengenal Warna dan Bentuk",
+      deskripsi: "Belajar mengenal warna dan bentuk melalui stimulus suara dan visual interaktif.",
+      badgeClass: "badge-seni",
+      badgeText: "Seni Budaya",
+      levels: [
+        {
+          name: "🟢 Dasar (Segera Hadir!)",
+          url: "mata-pelajaran/seni/tema-mengenal-warna-dan-bentuk-dasar/MengenalWarna.html",
+        },
+        {
+          name: "🟡 Menengah (Segera Hadir!)",
+          url: "mata-pelajaran/seni/tema-mengenal-warna-dan-bentuk-menengah/KiosJajanan.html",
+        },
+        {
+          name: "🟠 Lanjutan (Segera Hadir!)",
+          url: "mata-pelajaran/seni/tema-mengenal-warna-dan-bentuk-lanjutan/index.html",
+        },
+      ],
+    },
+  ],
 };
 
 /**
