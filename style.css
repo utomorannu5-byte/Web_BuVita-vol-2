@@ -897,3 +897,134 @@ body {
   color: var(--text-muted);
   line-height: 1.6;
 }
+/* ========================================================================== */
+/* KODE RESPONSIF KHUSUS UNTUK HP & TABLET (Maksimal lebar 768px)             */
+/* ========================================================================== */
+@media (max-width: 768px) {
+  /* 1. Perbaikan Overlfow & Background Body */
+  body {
+    overflow-x: hidden; /* Mencegah halaman bisa digeser ke kanan */
+    width: 100%;
+  }
+
+  /* 2. Perbaikan Navbar agar Tidak Terpotong ke Kanan */
+  .main-header {
+    flex-direction: column; /* Ubah susunan header jadi vertikal (ke bawah) */
+    height: auto; /* Biarkan tingginya menyesuaikan isi */
+  }
+
+  .logo-area {
+    width: 100%;
+    justify-content: center;
+    border-right: none;
+    border-bottom: 3px solid #000000;
+    padding: 10px 0;
+  }
+
+  .nav-menu {
+    width: 100%;
+    flex-direction: column; /* Menu HOME, GAMES, dll disusun ke bawah */
+    height: auto;
+  }
+
+  .nav-item {
+    width: 100%;
+    padding: 12px 0;
+    text-align: center;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  .action-btn {
+    border-left: none;
+    padding: 10px 20px;
+  }
+
+  /* 3. Perbaikan Judul Raksasa (Hero Title) agar Mengecil di HP */
+  .hero-section {
+    flex-direction: column-reverse; /* Di HP, gambar ilustrasi pindah ke atas teks */
+    gap: 30px;
+    padding: 40px 15px;
+
+    /* 🌟 KUNCI FORMULA TENGAH ADA DI SINI 🌟 */
+    justify-content: center; /* Memastikan konten tegak lurus di tengah */
+    align-items: center; /* Memaksa semua elemen di dalamnya rata tengah */
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 45px; /* Dikecilkan dari 95px agar muat di layar HP */
+    text-shadow:
+      3px 3px 0px #000000,
+      5px 5px 0px var(--classic-yellow);
+  }
+
+  /* 4. Perbaikan Gambar Ilustrasi agar Pas di Layar HP */
+  .hero-section {
+    min-height: calc(100vh - 70px); /* Memaksa tinggi hero pas memenuhi sisa layar setelah dipotong navbar */
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center; /* Membuat semua konten vertikal pas di tengah layar HP */
+    align-items: center;
+    padding: 30px 15px; /* Kurangi sedikit padding agar menghemat ruang di HP */
+  }
+
+  .hero-buttons {
+    flex-direction: column; /* Tombol "Mulai Belajar" disusun ke bawah */
+    gap: 12px;
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%; /* Tombol memenuhi lebar layar HP */
+    text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  /* ... kode yang tadi sudah berhasil biarkan saja ... */
+
+  /* 🌟 FORMULA TAMBAHAN UNTUK MENGAMANKAN LEBAR KONTEN 🌟 */
+  .hero-content {
+    width: 100%;
+    max-width: 100%;
+    padding: 0 10px; /* Memberi jarak aman agar teks tidak menempel ke pinggir layar */
+    box-sizing: border-box;
+  }
+
+  .hero-description {
+    font-size: 14px; /* Kecilkan sedikit ukuran teks deskripsi di HP/Tablet */
+    width: 100%;
+    max-width: 100%;
+    word-wrap: break-word; /* Memaksa teks panjang otomatis patah ke bawah, bukan melebar ke samping */
+  }
+}
+@media (max-width: 768px) {
+  /* ... kode yang lama biarkan saja ... */
+
+  /* 🌟 KODE SAPU JAGAT RESPONSIF 🌟 */
+  .hero-section,
+  .hero-content,
+  .main-header,
+  .catalog-section,
+  .game-collection-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden;
+    box-sizing: border-box !important;
+  }
+
+  /* Jinakkan judul raksasa agar tidak merusak lebar layar */
+  .hero-title {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: inline-block;
+    word-break: break-word;
+  }
+}
